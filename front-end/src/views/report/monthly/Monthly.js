@@ -99,7 +99,7 @@ function Monthly() {
           <CCol xs={12}>
             <CCard className="mb-4">
               <CCardHeader>
-                <strong>Current numbers - Badrul</strong>
+                <strong>Current numbers</strong>
               </CCardHeader>
               <CCardBody>
                 <CCardTitle>TBGJ21 TOTAL REGISTERED</CCardTitle>
