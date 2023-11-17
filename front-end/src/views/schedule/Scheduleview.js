@@ -31,7 +31,6 @@ const { config } = packageJson
 const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
   const [StudentData, setstudent] = useState([])
   const [TutorData, setTutorData] = useState([])
-  const [stdclass, setstdclass] = useState(1)
 
   const getData = async () => {
     try {
