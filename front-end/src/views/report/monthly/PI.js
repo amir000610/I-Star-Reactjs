@@ -10,7 +10,9 @@ import {
   CAlert,
   CCardTitle,
   CContainer,
+  CButton,
 } from '@coreui/react'
+import * as XLSX from 'xlsx'
 import {
   CTableBody,
   CTable,
@@ -80,6 +82,127 @@ function ParticipantInfo() {
     )
   }
 
+  const exportToExcel = () => {
+    const workbook = XLSX.utils.book_new()
+    const tableData = []
+
+    // Constructing the table data array
+    const headers = [
+      'Institution',
+      '7-12 Year(M)',
+      '7-12 Year(F)',
+      '13-17 Year(M)',
+      '13-17 Year(F)',
+      'TOTAL',
+      'ACTIVE',
+      'Completed',
+      'Incomplete',
+    ]
+    tableData.push(headers)
+
+    // Pushing rows of data
+    institutiondata.forEach((val) => {
+      const rowData = [val.learning_training_institutions]
+
+      // Push individual cell data based on your table structure
+      // Modify this according to your data structure
+      rowData.push(
+        StudentData?.filter(
+          (idx) =>
+            idx.institution_id === val.institution_id &&
+            (idx.level === 'S1' ||
+              idx.level === 'S2' ||
+              idx.level === 'S3' ||
+              idx.level === 'S4' ||
+              idx.level === 'S5') &&
+            idx.gender === 'MALE' &&
+            idx.status_on_programme === 'ACTIVE',
+        ).length,
+      )
+      rowData.push(
+        StudentData?.filter(
+          (idx) =>
+            idx.institution_id === val.institution_id &&
+            (idx.level === 'S1' ||
+              idx.level === 'S2' ||
+              idx.level === 'S3' ||
+              idx.level === 'S4' ||
+              idx.level === 'S5') &&
+            idx.gender === 'FEMALE' &&
+            idx.status_on_programme === 'ACTIVE',
+        ).length,
+      )
+      rowData.push(
+        StudentData?.filter(
+          (idx) =>
+            idx.institution_id === val.institution_id &&
+            (idx.level === 'F1' ||
+              idx.level === 'F2' ||
+              idx.level === 'F3' ||
+              idx.level === 'F4' ||
+              idx.level === 'F5') &&
+            idx.gender === 'MALE' &&
+            idx.status_on_programme === 'ACTIVE',
+        ).length,
+      )
+      rowData.push(
+        StudentData?.filter(
+          (idx) =>
+            idx.institution_id === val.institution_id &&
+            (idx.level === 'F1' ||
+              idx.level === 'F2' ||
+              idx.level === 'F3' ||
+              idx.level === 'F4' ||
+              idx.level === 'F5') &&
+            idx.gender === 'FEMALE' &&
+            idx.status_on_programme === 'ACTIVE',
+        ).length,
+      )
+      rowData.push(StudentData?.filter((idx) => idx.institution_id === val.institution_id).length)
+      rowData.push(
+        StudentData?.filter(
+          (idx) =>
+            idx.institution_id === val.institution_id && idx.status_on_programme === 'ACTIVE',
+        ).length,
+      )
+      rowData.push(
+        StudentData?.filter(
+          (idx) =>
+            idx.institution_id === val.institution_id && idx.status_on_programme === 'COMPLETED',
+        ).length,
+      )
+      rowData.push(
+        StudentData?.filter(
+          (idx) =>
+            idx.institution_id === val.institution_id && idx.status_on_programme === 'INCOMPLETE',
+        ).length,
+      )
+
+      // Push the rowData to the tableData array
+      tableData.push(rowData)
+    })
+
+    const footer = [
+      'Total',
+      '',
+      '',
+      '',
+      '',
+      StudentData?.length,
+      StudentData?.filter((idx) => idx.status_on_programme === 'ACTIVE').length,
+      StudentData?.filter((idx) => idx.status_on_programme === 'COMPLETED').length,
+      StudentData?.filter((idx) => idx.status_on_programme === 'INCOMPLETE').length,
+    ]
+    tableData.push(footer)
+
+    // Creating a worksheet
+    const worksheet = XLSX.utils.aoa_to_sheet(tableData)
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1')
+
+    // Save the workbook as an Excel file
+    XLSX.writeFile(workbook, 'exported_data.xlsx')
+  }
+
   const today = new Date()
   const options = { day: 'numeric', month: 'long', year: 'numeric' }
   const formattedDate = today.toLocaleDateString('en-US', options)
@@ -91,10 +214,13 @@ function ParticipantInfo() {
           <CCol xs={12}>
             <CCard className="mb-4">
               <CCardHeader>
-                <strong>Participants Information</strong>
+                <strong>PARTICIPANTS INFORMATION</strong>
               </CCardHeader>
               <CCardBody>
-                <CCardTitle>As at: {formattedDate}</CCardTitle>
+                <CCardTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  As at: {formattedDate}
+                  {''} <CButton onClick={exportToExcel}>Export to Excel</CButton>
+                </CCardTitle>
                 <CTable className="mt-3" responsive bordered>
                   <CTableHead>
                     <CTableRow>

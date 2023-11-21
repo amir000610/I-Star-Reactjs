@@ -83,7 +83,7 @@ function ProgrammeStatus() {
           <CCol xs={12}>
             <CCard className="mb-4">
               <CCardHeader>
-                <strong>Programme Status</strong>
+                <strong>PROGRAMME STATUS</strong>
               </CCardHeader>
               <CCardBody>
                 <CCardTitle>As at: {formattedDate}</CCardTitle>

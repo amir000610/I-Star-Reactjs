@@ -89,13 +89,13 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Monthly Report',
-    to: '/report',
+    to: '/monthly',
     icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Quaterly Report',
-    to: '/',
+    to: '/quaterly',
     icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
   },
   {

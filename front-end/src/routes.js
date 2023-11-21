@@ -12,10 +12,12 @@ const Register = React.lazy(() => import('./views/pages/register/Register'))
 const Tutoreg = React.lazy(() => import('./views/tutor/Tutoreg'))
 const Mainqr = React.lazy(() => import('./views/qrcode/Mainqr'))
 const Monthly = React.lazy(() => import('./views/report/monthly/Monthly'))
+const Quaterly = React.lazy(() => import('./views/report/quaterly/Quaterly'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/report', name: 'monthly', element: Monthly },
+  { path: '/quaterly', name: 'quaterly', element: Quaterly },
+  { path: '/monthly', name: 'monthly', element: Monthly },
   { path: '/qrcode', name: 'Mainqr', element: Mainqr },
   { path: '/module', name: 'Module', element: Addmdl },
   { path: '/register', name: 'Register', element: Register },

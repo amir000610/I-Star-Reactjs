@@ -9,9 +9,11 @@ import {
   CTableRow,
   CTableHeaderCell,
   CTableDataCell,
+  CButton,
 } from '@coreui/react'
 import { useState, useEffect } from 'react'
 import { cilWarning } from '@coreui/icons'
+import * as XLSX from 'xlsx'
 
 import packageJson from '../../../../package.json'
 const { config } = packageJson
@@ -72,6 +74,46 @@ function Programme() {
     )
   }
 
+  // Function to handle export to Excel
+  const handleExportToExcel = () => {
+    // Prepare data for export (similar to what you display in the table)
+    const data = institutiondata.map((val, key) => ({
+      No: key + 1,
+      Institution: val.institution_name,
+      'AAP English': `${formdata
+        .filter(
+          (idx) =>
+            idx.institution_id === val.institution_id && idx.complete === 1 && idx.type === '2',
+        )
+        .map((val) => Number(val.hour))
+        .reduce((acc, currentValue) => acc + currentValue, 0)} / 30`,
+      'AAP Math': `${formdata
+        .filter(
+          (idx) =>
+            idx.institution_id === val.institution_id && idx.complete === 1 && idx.type === '3',
+        )
+        .map((val) => Number(val.hour))
+        .reduce((acc, currentValue) => acc + currentValue, 0)} / 30`,
+      NDP: `${formdata
+        .filter(
+          (idx) =>
+            idx.institution_id === val.institution_id && idx.complete === 1 && idx.type === '1',
+        )
+        .map((val) => Number(val.hour))
+        .reduce((acc, currentValue) => acc + currentValue, 0)} / 90`,
+    }))
+
+    // Create a new workbook
+    const workbook = XLSX.utils.book_new()
+    const worksheet = XLSX.utils.json_to_sheet(data)
+
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+
+    // Generate a downloadable Excel file
+    XLSX.writeFile(workbook, 'programme_delivery_status.xlsx')
+  }
+
   const today = new Date()
   const options = { day: 'numeric', month: 'long', year: 'numeric' }
   const formattedDate = today.toLocaleDateString('en-US', options)
@@ -83,10 +125,13 @@ function Programme() {
           <CCol xs={12}>
             <CCard className="mb-4">
               <CCardHeader>
-                <strong>Program Delivery Status</strong>
+                <strong>PROGRAM DELIVERY STATUS</strong>
               </CCardHeader>
               <CCardBody>
-                <CCardTitle>As at: {formattedDate}</CCardTitle>
+                <CCardTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  As at: {formattedDate}
+                  {''} <CButton onClick={handleExportToExcel}>Export to Excel</CButton>
+                </CCardTitle>
                 <CTable style={{ overflow: 'hidden' }} responsive bordered>
                   <CTableHead color="dark">
                     <CTableRow>

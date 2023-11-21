@@ -22,7 +22,7 @@ import ProgrammeStatus from '../monthly/PS'
 import packageJson from '../../../../package.json'
 const { config } = packageJson
 
-function Monthly() {
+function Quaterly() {
   //Login Credential
   axios.defaults.withCredentials = true
   useEffect(() => {
@@ -99,7 +99,7 @@ function Monthly() {
           <CCol xs={12}>
             <CCard className="mb-4">
               <CCardHeader>
-                <strong>CURRENT NUMBERS</strong>
+                <strong>STUDENTS’ ATTENDANCE RECORD</strong>
               </CCardHeader>
               <CCardBody>
                 <CCardTitle>TBGJ21 TOTAL REGISTERED</CCardTitle>
@@ -168,4 +168,4 @@ function Monthly() {
   }
 }
 
-export default Monthly
+export default Quaterly
