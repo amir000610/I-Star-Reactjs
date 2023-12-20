@@ -92,7 +92,7 @@ const _nav = [
     to: '/monthly',
     icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
   },
-  {
+  /*{
     component: CNavItem,
     name: 'Quaterly Report',
     to: '/quaterly',
@@ -109,7 +109,7 @@ const _nav = [
     name: 'Assesment',
     to: '/theme/typography',
     icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
-  },
+  },*/
 ]
 
 export default _nav

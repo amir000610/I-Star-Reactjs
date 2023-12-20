@@ -26,11 +26,14 @@ import propTypes from 'prop-types'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import packageJson from '../../../package.json'
+import { useNavigate } from 'react-router-dom'
 const { config } = packageJson
 
 const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
   const [StudentData, setstudent] = useState([])
   const [TutorData, setTutorData] = useState([])
+  const [role, setrole] = useState('')
+  const navigate = useNavigate()
 
   const getData = async () => {
     try {
@@ -109,9 +112,22 @@ const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
   }
 
   useEffect(() => {
+    axios
+      .post(`${config.REACT_APP_API_ENDPOINT}/`)
+      .then((res) => {
+        if (res.data.valid) {
+          setrole(res.data.role)
+          if (res.data.role === 'Admin') {
+            getData() // Call getData here for Admin role
+          }
+        } else {
+          navigate('/login')
+        }
+      })
+      .catch((err) => console.log(err))
     getData()
     gettutor()
-  }, [])
+  }, [navigate])
 
   return (
     <CModal visible={Tvisible} onClose={() => TsetVisible(false)} size="lg">
@@ -210,18 +226,18 @@ const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
         <CButton color="secondary" onClick={() => TsetVisible(false)}>
           Close
         </CButton>
-        {TutorData?.filter(
-          (idx) => idx.schedule_id === schedule_id && idx.class_Ndp === idx.class,
-        ).slice(0, 1)[0]?.complete === 1 ? (
-          <CButton color="secondary" disabled>
-            Completed {''}
-            <FontAwesomeIcon icon={faCheck} style={{ color: '#0c0d0d' }} />
-          </CButton>
-        ) : (
-          <CButton color="secondary" onClick={complete}>
-            Complete
-          </CButton>
-        )}
+        {role === 'Admin' &&
+          (TutorData?.filter(
+            (idx) => idx.schedule_id === schedule_id && idx.class_Ndp === idx.class,
+          ).slice(0, 1)[0]?.complete === 1 ? (
+            <CButton color="secondary" disabled>
+              Completed <FontAwesomeIcon icon={faCheck} style={{ color: '#0c0d0d' }} />
+            </CButton>
+          ) : (
+            <CButton color="secondary" onClick={complete}>
+              Complete
+            </CButton>
+          ))}
       </CModalFooter>
     </CModal>
   )
