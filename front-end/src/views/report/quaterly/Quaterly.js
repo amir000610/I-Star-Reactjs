@@ -11,18 +11,20 @@ import {
   CAlert,
   CCardTitle,
   CCardText,
+  CContainer,
+  CAccordion,
+  CAccordionItem,
+  CAccordionHeader,
+  CAccordionBody,
 } from '@coreui/react'
 import { CChart } from '@coreui/react-chartjs'
 import { useState, useEffect } from 'react'
 import { cilWarning } from '@coreui/icons'
-import Programme from '../monthly/Prog'
-import ParticipantInfo from '../monthly/PI'
-import ProgrammeStatus from '../monthly/PS'
 
 import packageJson from '../../../../package.json'
 const { config } = packageJson
 
-function Quaterly() {
+function Monthly() {
   //Login Credential
   axios.defaults.withCredentials = true
   useEffect(() => {
@@ -95,77 +97,55 @@ function Quaterly() {
   if (role === 'Admin') {
     return (
       <div>
-        <CRow>
-          <CCol xs={12}>
-            <CCard className="mb-4">
-              <CCardHeader>
-                <strong>STUDENTS’ ATTENDANCE RECORD</strong>
-              </CCardHeader>
-              <CCardBody>
-                <CCardTitle>TBGJ21 TOTAL REGISTERED</CCardTitle>
-                <span>As at: {formattedDate}</span>
-                <CRow>
-                  <CCol xs={4}>
-                    <CCallout>
-                      <CCardText>Participants:</CCardText>
-                      <CCardTitle>{infostd5[0]?.total + infostd5[1]?.total}</CCardTitle>
-                    </CCallout>
-                  </CCol>
-                  {infostd5?.map((val, key) => {
-                    return (
-                      <CCol xs={4} key={key}>
-                        <CCallout>
-                          {val.combined_status === 'ACTIVE' ? (
-                            <CCardText>Current Active Participants:</CCardText>
-                          ) : (
-                            <CCardText>Total Inactive Participants:</CCardText>
-                          )}{' '}
-                          <CCardTitle>{val.total}</CCardTitle>
-                        </CCallout>
-                      </CCol>
-                    )
-                  })}
-                </CRow>
-                <CRow>
-                  <CCol xs={6}>
-                    <CChart
-                      type="pie"
-                      data={data}
-                      options={{
-                        plugins: {
-                          title: {
-                            display: true,
-                            text: 'Current Number',
-                          },
-                        },
-                      }}
-                    />
-                  </CCol>
-                  <CCol xs={6}>
-                    <CChart
-                      type="pie"
-                      data={percentageData}
-                      options={{
-                        plugins: {
-                          title: {
-                            display: true,
-                            text: 'Percentage (%)',
-                          },
-                        },
-                      }}
-                    />
-                  </CCol>
-                </CRow>
-              </CCardBody>
-            </CCard>
-          </CCol>
-        </CRow>
-        <Programme />
-        <ParticipantInfo />
-        <ProgrammeStatus />
+        <CAccordion>
+          <CAccordionItem itemKey={1}>
+            <CAccordionHeader>
+              <CContainer>
+                <CCallout color="primary">
+                  <center>
+                    <b>JKM(IN Progress)</b>
+                  </center>
+                </CCallout>
+              </CContainer>
+            </CAccordionHeader>
+            <CAccordionBody>
+              <CRow>
+                <CCol xs={12}>
+                  <CCard className="mb-4">
+                    <CCardHeader> </CCardHeader>
+                    <CCardBody>
+                      <CCardTitle></CCardTitle>
+                      <span>As at: {formattedDate}</span>
+                      <CRow>
+                        <CCol xs={4}>
+                          <CCallout>
+                            <CCardText>Participants:</CCardText>
+                            <CCardTitle></CCardTitle>
+                          </CCallout>
+                        </CCol>
+                      </CRow>
+                    </CCardBody>
+                  </CCard>
+                </CCol>
+              </CRow>
+            </CAccordionBody>
+          </CAccordionItem>
+          <CAccordionItem itemKey={2}>
+            <CAccordionHeader>
+              <CContainer>
+                <CCallout color="primary">
+                  <center>
+                    <b>RKDA(IN Progress)</b>
+                  </center>
+                </CCallout>
+              </CContainer>
+            </CAccordionHeader>
+            <CAccordionBody></CAccordionBody>
+          </CAccordionItem>
+        </CAccordion>
       </div>
     )
   }
 }
 
-export default Quaterly
+export default Monthly

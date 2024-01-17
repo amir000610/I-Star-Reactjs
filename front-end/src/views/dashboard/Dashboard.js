@@ -130,16 +130,18 @@ const Dashboard = () => {
                 const upcomingPrograms = takwim
                   .filter((val) => val.institution_id.toString() === idx.institution_id.toString())
                   .filter((val) => {
-                    const todaydate = new Date()
-                    todaydate.setHours(0, 0, 0, 0)
-                    const oneWeekFromNow = new Date(todaydate.getTime() + 7 * 24 * 60 * 60 * 1000)
-                    oneWeekFromNow.setHours(0, 0, 0, 0)
+                    const startDate = new Date() // Replace this with your selected start date
+                    const endDate = new Date() // Replace this with your selected end date
+                    // Assuming the dates are correctly formatted as JavaScript Date objects
+
                     const date = new Date(val.date)
+
+                    // Check if the program's date is within the selected range
                     return (
-                      date >= todaydate &&
-                      date <= oneWeekFromNow &&
-                      date.getDay() >= 0 && // Monday (0 is Sunday, 1 is Monday)
-                      date.getDay() <= 6 // Friday (6 is Saturday, 5 is Friday)
+                      date >= startDate &&
+                      date <= endDate &&
+                      date.getDay() >= 0 &&
+                      date.getDay() <= 6
                     )
                   })
                   .sort((a, b) => {

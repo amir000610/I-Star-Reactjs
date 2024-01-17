@@ -98,7 +98,7 @@ const _nav = [
     to: '/quaterly',
     icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
   },
-  {
+  /*{
     component: CNavItem,
     name: 'Yearly Report',
     to: '/',

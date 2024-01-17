@@ -11,13 +11,22 @@ import {
   CAlert,
   CCardTitle,
   CCardText,
+  CContainer,
+  CAccordion,
+  CAccordionItem,
+  CAccordionHeader,
+  CAccordionBody,
 } from '@coreui/react'
 import { CChart } from '@coreui/react-chartjs'
 import { useState, useEffect } from 'react'
 import { cilWarning } from '@coreui/icons'
-import Programme from '../monthly/Prog'
-import ParticipantInfo from '../monthly/PI'
-import ProgrammeStatus from '../monthly/PS'
+import Programme from '../monthly/JKM/Prog'
+import ParticipantInfo from '../monthly/JKM/PI'
+import ProgrammeStatus from '../monthly/JKM/PS'
+import ParticipantInfo2 from './RKDA/PInfo'
+import Programme2 from './RKDA/Prog2'
+import ProgrammeStatus2 from './RKDA/PStatus'
+import Chart from './RKDA/Chart'
 
 import packageJson from '../../../../package.json'
 const { config } = packageJson
@@ -95,74 +104,106 @@ function Monthly() {
   if (role === 'Admin') {
     return (
       <div>
-        <CRow>
-          <CCol xs={12}>
-            <CCard className="mb-4">
-              <CCardHeader>
-                <strong>CURRENT NUMBERS</strong>
-              </CCardHeader>
-              <CCardBody>
-                <CCardTitle>TBGJ21 TOTAL REGISTERED</CCardTitle>
-                <span>As at: {formattedDate}</span>
-                <CRow>
-                  <CCol xs={4}>
-                    <CCallout>
-                      <CCardText>Participants:</CCardText>
-                      <CCardTitle>{infostd5[0]?.total + infostd5[1]?.total}</CCardTitle>
-                    </CCallout>
-                  </CCol>
-                  {infostd5?.map((val, key) => {
-                    return (
-                      <CCol xs={4} key={key}>
-                        <CCallout>
-                          {val.combined_status === 'ACTIVE' ? (
-                            <CCardText>Current Active Participants:</CCardText>
-                          ) : (
-                            <CCardText>Total Inactive Participants:</CCardText>
-                          )}{' '}
-                          <CCardTitle>{val.total}</CCardTitle>
-                        </CCallout>
-                      </CCol>
-                    )
-                  })}
-                </CRow>
-                <CRow>
-                  <CCol xs={6}>
-                    <CChart
-                      type="pie"
-                      data={data}
-                      options={{
-                        plugins: {
-                          title: {
-                            display: true,
-                            text: 'Current Number',
-                          },
-                        },
-                      }}
-                    />
-                  </CCol>
-                  <CCol xs={6}>
-                    <CChart
-                      type="pie"
-                      data={percentageData}
-                      options={{
-                        plugins: {
-                          title: {
-                            display: true,
-                            text: 'Percentage (%)',
-                          },
-                        },
-                      }}
-                    />
-                  </CCol>
-                </CRow>
-              </CCardBody>
-            </CCard>
-          </CCol>
-        </CRow>
-        <Programme />
-        <ParticipantInfo />
-        <ProgrammeStatus />
+        <CAccordion>
+          <CAccordionItem itemKey={1}>
+            <CAccordionHeader>
+              <CContainer>
+                <CCallout color="primary">
+                  <center>
+                    <b>JKM</b>
+                  </center>
+                </CCallout>
+              </CContainer>
+            </CAccordionHeader>
+            <CAccordionBody>
+              <CRow>
+                <CCol xs={12}>
+                  <CCard className="mb-4">
+                    <CCardHeader>
+                      <strong>CURRENT NUMBERS</strong>
+                    </CCardHeader>
+                    <CCardBody>
+                      <CCardTitle>TBGJ21 TOTAL REGISTERED</CCardTitle>
+                      <span>As at: {formattedDate}</span>
+                      <CRow>
+                        <CCol xs={4}>
+                          <CCallout>
+                            <CCardText>Participants:</CCardText>
+                            <CCardTitle>{infostd5[0]?.total + infostd5[1]?.total}</CCardTitle>
+                          </CCallout>
+                        </CCol>
+                        {infostd5?.map((val, key) => {
+                          return (
+                            <CCol xs={4} key={key}>
+                              <CCallout>
+                                {val.combined_status === 'ACTIVE' ? (
+                                  <CCardText>Current Active Participants:</CCardText>
+                                ) : (
+                                  <CCardText>Total Inactive Participants:</CCardText>
+                                )}{' '}
+                                <CCardTitle>{val.total}</CCardTitle>
+                              </CCallout>
+                            </CCol>
+                          )
+                        })}
+                      </CRow>
+                      <CRow>
+                        <CCol xs={6}>
+                          <CChart
+                            type="pie"
+                            data={data}
+                            options={{
+                              plugins: {
+                                title: {
+                                  display: true,
+                                  text: 'Current Number',
+                                },
+                              },
+                            }}
+                          />
+                        </CCol>
+                        <CCol xs={6}>
+                          <CChart
+                            type="pie"
+                            data={percentageData}
+                            options={{
+                              plugins: {
+                                title: {
+                                  display: true,
+                                  text: 'Percentage (%)',
+                                },
+                              },
+                            }}
+                          />
+                        </CCol>
+                      </CRow>
+                    </CCardBody>
+                  </CCard>
+                </CCol>
+              </CRow>
+              <Programme />
+              <ParticipantInfo />
+              <ProgrammeStatus />
+            </CAccordionBody>
+          </CAccordionItem>
+          <CAccordionItem itemKey={2}>
+            <CAccordionHeader>
+              <CContainer>
+                <CCallout color="primary">
+                  <center>
+                    <b>RKDA</b>
+                  </center>
+                </CCallout>
+              </CContainer>
+            </CAccordionHeader>
+            <CAccordionBody>
+              <Chart />
+              <Programme2 />
+              <ParticipantInfo2 />
+              <ProgrammeStatus2 />
+            </CAccordionBody>
+          </CAccordionItem>
+        </CAccordion>
       </div>
     )
   }

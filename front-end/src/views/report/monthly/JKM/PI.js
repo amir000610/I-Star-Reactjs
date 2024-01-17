@@ -24,7 +24,7 @@ import {
 import { useState, useEffect } from 'react'
 import { cilWarning } from '@coreui/icons'
 
-import packageJson from '../../../../package.json'
+import packageJson from '../../../../../package.json'
 const { config } = packageJson
 
 function ParticipantInfo() {
@@ -40,13 +40,23 @@ function ParticipantInfo() {
 
   const getinstitution = async () => {
     try {
-      const getinstitution = await axios.get(`${config.REACT_APP_API_ENDPOINT}/institution`)
+      const getinstitution = await axios.get(`${config.REACT_APP_API_ENDPOINT}/Xinstitution`)
       setinstitutiondata(getinstitution.data)
     } catch (err) {
       console.log(err)
     }
   }
   const [institutiondata, setinstitutiondata] = useState([])
+
+  const RKDAinstitution = async () => {
+    try {
+      const RKDAinstitution = await axios.get(`${config.REACT_APP_API_ENDPOINT}/RKDAinstitution`)
+      setXinstitutiondata(RKDAinstitution.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const [Xinstitutiondata, setXinstitutiondata] = useState([])
 
   //Login Credential
   axios.defaults.withCredentials = true
@@ -61,6 +71,7 @@ function ParticipantInfo() {
       .catch((err) => console.log(err))
     getData()
     getinstitution()
+    RKDAinstitution()
   })
   const [role, setrole] = useState('')
 
@@ -188,10 +199,15 @@ function ParticipantInfo() {
       '',
       '',
       '',
-      StudentData?.length,
-      StudentData?.filter((idx) => idx.status_on_programme === 'ACTIVE').length,
-      StudentData?.filter((idx) => idx.status_on_programme === 'COMPLETED').length,
-      StudentData?.filter((idx) => idx.status_on_programme === 'INCOMPLETE').length,
+      StudentData?.filter((idx) => idx.institution_id !== 8).length,
+      StudentData?.filter((idx) => idx.status_on_programme === 'ACTIVE' && idx.institution_id !== 8)
+        .length,
+      StudentData?.filter(
+        (idx) => idx.status_on_programme === 'COMPLETED' && idx.institution_id !== 8,
+      ).length,
+      StudentData?.filter(
+        (idx) => idx.status_on_programme === 'INCOMPLETE' && idx.institution_id !== 8,
+      ).length,
     ]
     tableData.push(footer)
 
@@ -200,12 +216,14 @@ function ParticipantInfo() {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1')
 
     // Save the workbook as an Excel file
-    XLSX.writeFile(workbook, 'exported_data.xlsx')
+    XLSX.writeFile(workbook, 'Participant_Info.xlsx')
   }
 
   const today = new Date()
   const options = { day: 'numeric', month: 'long', year: 'numeric' }
   const formattedDate = today.toLocaleDateString('en-US', options)
+
+  console.log(StudentData.filter((idx) => idx.institution_id === 8))
 
   if (role === 'Admin') {
     return (
@@ -390,29 +408,38 @@ function ParticipantInfo() {
                         <center>Total</center>
                       </CTableDataCell>
                       <CTableDataCell>
-                        <center>{StudentData?.length}</center>
+                        <center>
+                          {StudentData?.filter((idx) => idx.institution_id !== 8).length}
+                        </center>
                       </CTableDataCell>
                       <CTableDataCell>
                         <center>
                           {
-                            StudentData?.filter((idx) => idx.status_on_programme === 'ACTIVE')
-                              .length
+                            StudentData?.filter(
+                              (idx) =>
+                                idx.status_on_programme === 'ACTIVE' && idx.institution_id !== 8,
+                            ).length
                           }
                         </center>
                       </CTableDataCell>
                       <CTableDataCell>
                         <center>
                           {
-                            StudentData?.filter((idx) => idx.status_on_programme === 'COMPLETED')
-                              .length
+                            StudentData?.filter(
+                              (idx) =>
+                                idx.status_on_programme === 'COMPLETED' && idx.institution_id !== 8,
+                            ).length
                           }
                         </center>
                       </CTableDataCell>
                       <CTableDataCell>
                         <center>
                           {
-                            StudentData?.filter((idx) => idx.status_on_programme === 'INCOMPLETE')
-                              .length
+                            StudentData?.filter(
+                              (idx) =>
+                                idx.status_on_programme === 'INCOMPLETE' &&
+                                idx.institution_id !== 8,
+                            ).length
                           }
                         </center>
                       </CTableDataCell>

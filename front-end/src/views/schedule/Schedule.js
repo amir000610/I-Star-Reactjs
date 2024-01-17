@@ -66,6 +66,7 @@ const Module = () => {
   const [institution_id, setinstiid] = useState('')
   const [module_id, setmdlid] = useState('')
   const [start_date, setstartdate] = useState('')
+  const [end_date, setenddate] = useState('')
   const [scdclass, setscdclass] = useState('')
   const [active, setactive] = useState()
 
@@ -82,6 +83,7 @@ const Module = () => {
         data3: module_id,
         data4: scdclass,
         data6: start_date,
+        data7: end_date,
       })
       window.location.reload()
       setVisible(false)
@@ -149,6 +151,15 @@ const Module = () => {
   const updatedformdata = formdata?.filter((itm) =>
     role === 'Admin' ? itm.login_id > 0 : itm.login_id === loginuser,
   )
+
+  const pdate = (idx) => {
+    const date = new Date(idx)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const newDate = `${day}-${month}-${year}`
+    return newDate
+  }
 
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
@@ -256,9 +267,17 @@ const Module = () => {
                     type="date"
                     placeholder="Date"
                     aria-label="default input example"
-                    floatingLabel="Date"
+                    floatingLabel="Start Date"
                     floatingClassName="mb-3"
                     onChange={(e) => setstartdate(e.target.value)}
+                  />
+                  <CFormInput
+                    type="date"
+                    placeholder="Date"
+                    aria-label="default input example"
+                    floatingLabel="End Date"
+                    floatingClassName="mb-3"
+                    onChange={(e) => setenddate(e.target.value)}
                   />
                 </CModalBody>
                 <CModalFooter>
@@ -286,11 +305,6 @@ const Module = () => {
                 </CTableHead>
                 <CTableBody>
                   {updatedformdataa?.map((val, key) => {
-                    const date = new Date(val.date)
-                    const year = date.getFullYear()
-                    const month = String(date.getMonth() + 1).padStart(2, '0')
-                    const day = String(date.getDate()).padStart(2, '0')
-                    const newDate = `${year}-${month}-${day}`
                     return (
                       <CTableRow key={key}>
                         <CTableDataCell>
@@ -299,7 +313,10 @@ const Module = () => {
                         <CTableDataCell>{val.institution_name}</CTableDataCell>
                         <CTableDataCell>{val.module_name}</CTableDataCell>
                         <CTableDataCell>Class {val.class}</CTableDataCell>
-                        <CTableDataCell>{newDate}</CTableDataCell>
+                        <CTableDataCell>
+                          <b>Start Date:</b> {pdate(val.date)} <br />
+                          <b>End Date:</b> {pdate(val.end_date)}
+                        </CTableDataCell>
                         <CTableDataCell>{val.name}</CTableDataCell>
                         <CTableDataCell style={{ width: '50px' }}>
                           <CDropdown placement="auto">

@@ -177,14 +177,15 @@ app.get("/viewschedule" , (req,res) => {
 
 //AddNewSchedule
 app.post("/addform", (req,res) => {
-  const { data1,data2,data3,data4,data6 } = req.body
-  const sql = "INSERT INTO schedule (login_id,institution_id,module_id,class,date) VALUES(?)"
+  const { data1,data2,data3,data4,data6,data7 } = req.body
+  const sql = "INSERT INTO schedule (login_id,institution_id,module_id,class,date,end_date) VALUES(?)"
   const values = [
     data1,
     data2,
     data3,
     data4,
     data6,
+    data7,
   ];
 
   db.query(sql, [values],(err,data) => {
@@ -240,6 +241,14 @@ app.get("/getpdttr" , (req,res) => {
 
 app.get("/getpd3" , (req,res) => {
   const sql = "SELECT * FROM student JOIN institution ON student.institution_id = institution.institution_id";
+  db.query(sql, (err,data) => {
+      if (err) return res.json(err)
+      return res.json(data)
+  })
+})
+
+app.get("/getpd4" , (req,res) => {
+  const sql = "SELECT * FROM student JOIN institution ON student.institution_id = 8";
   db.query(sql, (err,data) => {
       if (err) return res.json(err)
       return res.json(data)
@@ -449,6 +458,22 @@ app.get("/institution" , (req,res) => {
   })
 })
 
+app.get("/Xinstitution" , (req,res) => {
+  const sql = "SELECT * FROM institution WHERE institution_id BETWEEN 1 AND 7" 
+  db.query(sql,(err,data) => {
+      if (err) return res.json(err)
+      return res.json(data)
+  })
+})
+
+app.get("/RKDAinstitution" , (req,res) => {
+  const sql = "SELECT * FROM institution WHERE institution_id = 8" 
+  db.query(sql,(err,data) => {
+      if (err) return res.json(err)
+      return res.json(data)
+  })
+})
+
 //AddInstitution
 app.post("/addinsti", (req, res) => {
   const sql =
@@ -568,7 +593,15 @@ app.get("/jkm" , (req,res) => {
 })
 
 app.get("/getinfo5" , (req,res) => {
-  const sql = "SELECT CASE WHEN status_on_programme IN ('incomplete', 'completed') THEN 'incomplete/complete'ELSE status_on_programme END as combined_status, COUNT(*) AS total FROM student WHERE institution_id IN (1,2,3,4,5,6,8) AND status_on_programme IN ('active', 'incomplete', 'completed')GROUP BY combined_status";
+  const sql = "SELECT CASE WHEN status_on_programme IN ('incomplete', 'completed') THEN 'incomplete/complete'ELSE status_on_programme END as combined_status, COUNT(*) AS total FROM student WHERE institution_id IN (1,2,3,4,5,6) AND status_on_programme IN ('active', 'incomplete', 'completed')GROUP BY combined_status";
+  db.query(sql,(err,data) => {
+      if (err) return res.json(err)
+      return res.json(data)
+  })
+})
+
+app.get("/getinfo6" , (req,res) => {
+  const sql = "SELECT CASE WHEN status_on_programme IN ('incomplete', 'completed') THEN 'incomplete/complete'ELSE status_on_programme END as combined_status, COUNT(*) AS total FROM student WHERE institution_id = 8 AND status_on_programme IN ('active', 'incomplete', 'completed')GROUP BY combined_status";
   db.query(sql,(err,data) => {
       if (err) return res.json(err)
       return res.json(data)
