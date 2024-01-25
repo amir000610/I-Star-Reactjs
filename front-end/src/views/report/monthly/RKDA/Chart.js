@@ -100,7 +100,7 @@ function Chart() {
                 <strong>CURRENT NUMBERS</strong>
               </CCardHeader>
               <CCardBody>
-                <CCardTitle>TBGJ21 TOTAL REGISTERED</CCardTitle>
+                <CCardTitle>TBGD21 TOTAL REGISTERED</CCardTitle>
                 <span>As at: {formattedDate}</span>
                 <CRow>
                   <CCol xs={4}>
