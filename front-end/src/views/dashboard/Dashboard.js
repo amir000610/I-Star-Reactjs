@@ -150,7 +150,6 @@ const Dashboard = () => {
                     const dateB = new Date(b.date)
                     return dateB - dateA // Sort in descending order to get the latest date first
                   })
-                console.log(takwim)
                 return (
                   <CCol sm={6} lg={3} key={key}>
                     <CCallout color={color(idx.institution_id)}>

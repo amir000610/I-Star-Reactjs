@@ -7,7 +7,7 @@
     "url": "https://github.com/coreui/coreui-free-react-admin-template/issues"
   },
   "config": {
-    "REACT_APP_API_ENDPOINT": "http ://localhost:8000"
+    "REACT_APP_API_ENDPOINT": "https://api.irshad-istar.com"
   },
   "repository": {
     "type": "git",

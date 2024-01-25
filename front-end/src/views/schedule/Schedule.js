@@ -69,7 +69,6 @@ const Module = () => {
   const [end_date, setenddate] = useState('')
   const [scdclass, setscdclass] = useState('')
   const [active, setactive] = useState()
-
   const [role, setrole] = useState('')
   const [loginuser, setLoggedInUserId] = useState('')
 

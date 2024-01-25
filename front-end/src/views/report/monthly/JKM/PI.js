@@ -125,7 +125,8 @@ function ParticipantInfo() {
               idx.level === 'S2' ||
               idx.level === 'S3' ||
               idx.level === 'S4' ||
-              idx.level === 'S5') &&
+              idx.level === 'S5' ||
+              idx.level === 'S6') &&
             idx.gender === 'MALE' &&
             idx.status_on_programme === 'ACTIVE',
         ).length,
@@ -138,7 +139,8 @@ function ParticipantInfo() {
               idx.level === 'S2' ||
               idx.level === 'S3' ||
               idx.level === 'S4' ||
-              idx.level === 'S5') &&
+              idx.level === 'S5' ||
+              idx.level === 'S6') &&
             idx.gender === 'FEMALE' &&
             idx.status_on_programme === 'ACTIVE',
         ).length,
@@ -300,7 +302,8 @@ function ParticipantInfo() {
                                       idx.level === 'S2' ||
                                       idx.level === 'S3' ||
                                       idx.level === 'S4' ||
-                                      idx.level === 'S5') &&
+                                      idx.level === 'S5' ||
+                                      idx.level === 'S6') &&
                                     idx.gender === 'MALE' &&
                                     idx.status_on_programme === 'ACTIVE',
                                 ).length
@@ -317,7 +320,8 @@ function ParticipantInfo() {
                                       idx.level === 'S2' ||
                                       idx.level === 'S3' ||
                                       idx.level === 'S4' ||
-                                      idx.level === 'S5') &&
+                                      idx.level === 'S5' ||
+                                      idx.level === 'S6') &&
                                     idx.gender === 'FEMALE' &&
                                     idx.status_on_programme === 'ACTIVE',
                                 ).length
