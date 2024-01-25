@@ -42,7 +42,7 @@ const AppHeaderDropdown = () => {
         setError('Error fetching user data')
         console.error(err)
       })
-  })
+  }, [])
   const navigate = useNavigate()
 
   const handleDelete = () => {

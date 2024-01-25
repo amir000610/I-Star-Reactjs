@@ -248,8 +248,7 @@ const Attnd = () => {
     getData()
     getform()
     gettutor()
-    //console.log(otherres)
-  }, [navigate, otherres])
+  }, [])
 
   if (role === 'Admin') {
     return (
@@ -348,6 +347,7 @@ const Attnd = () => {
                         <option value="1">Class 1</option>
                         <option value="2">Class 2</option>
                         <option value="3">Class 3</option>
+                        <option value="3">Class 4</option>
                       </CFormSelect>
                     )}
                     {currentclass && (

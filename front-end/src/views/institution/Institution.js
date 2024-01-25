@@ -84,7 +84,7 @@ const AddInsti = () => {
         }
       })
       .catch((err) => console.log(err))
-  })
+  }, [])
   const navigate = useNavigate()
 
   const [role, setrole] = useState('')
@@ -94,7 +94,7 @@ const AddInsti = () => {
       setShowAlert(true)
       console.log(role)
     }
-  }, [role])
+  }, [])
 
   if (showAlert) {
     return (

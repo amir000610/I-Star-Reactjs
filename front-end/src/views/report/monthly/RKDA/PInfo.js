@@ -72,16 +72,15 @@ function ParticipantInfo2() {
     getData()
     getinstitution()
     RKDAinstitution()
-  })
+  }, [])
   const [role, setrole] = useState('')
 
   //Alert
   useEffect(() => {
     if (role === 'Tutor') {
       setShowAlert(true)
-      console.log(role)
     }
-  }, [role])
+  }, [])
   const [showAlert, setShowAlert] = useState(false)
 
   if (showAlert) {

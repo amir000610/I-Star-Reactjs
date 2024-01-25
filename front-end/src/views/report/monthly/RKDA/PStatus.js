@@ -50,7 +50,7 @@ function ProgrammeStatus2() {
       .catch((err) => console.log(err))
     getform()
     getinstitution()
-  })
+  }, [])
   const [role, setrole] = useState('')
 
   //Alert
@@ -58,7 +58,7 @@ function ProgrammeStatus2() {
     if (role === 'Tutor') {
       setShowAlert(true)
     }
-  }, [role])
+  }, [])
   const [showAlert, setShowAlert] = useState(false)
 
   if (showAlert) {

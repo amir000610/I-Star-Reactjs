@@ -233,7 +233,7 @@ const Pic = () => {
     getData()
     getform()
     gettutor()
-  })
+  }, [])
 
   if (role === 'Tutor') {
     return (

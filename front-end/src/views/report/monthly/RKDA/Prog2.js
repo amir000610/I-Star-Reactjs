@@ -10,8 +10,6 @@ import {
   CTableHeaderCell,
   CTableDataCell,
   CButton,
-  CContainer,
-  CCallout,
 } from '@coreui/react'
 import { useState, useEffect } from 'react'
 import { cilWarning } from '@coreui/icons'
@@ -54,7 +52,7 @@ function Programme2() {
       .catch((err) => console.log(err))
     getform()
     getinstitution()
-  })
+  }, [])
   const [role, setrole] = useState('')
 
   //Alert
@@ -62,7 +60,7 @@ function Programme2() {
     if (role === 'Tutor') {
       setShowAlert(true)
     }
-  }, [role])
+  }, [])
   const [showAlert, setShowAlert] = useState(false)
 
   if (showAlert) {

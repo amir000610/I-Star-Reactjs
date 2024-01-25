@@ -43,17 +43,16 @@ function Monthly() {
         }
       })
       .catch((err) => console.log(err))
-  })
+  }, [])
   const [role, setrole] = useState('')
 
   //Alert
   useEffect(() => {
     if (role === 'Tutor') {
       setShowAlert(true)
-      console.log(role)
     }
     getinfo5()
-  }, [role])
+  }, [])
   const [showAlert, setShowAlert] = useState(false)
 
   const getinfo5 = async () => {

@@ -125,7 +125,7 @@ const PDregister = () => {
   useEffect(() => {
     getData()
     fetchInstitution()
-  })
+  }, [])
 
   //DeleteButton
   const onDelete = async (id) => {

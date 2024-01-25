@@ -84,7 +84,7 @@ const Tutoreg = () => {
     if (role === 'Tutor') {
       setShowAlert(true)
     }
-  }, [role, tutor])
+  }, [])
   const [showAlert, setShowAlert] = useState(false)
 
   if (showAlert) {

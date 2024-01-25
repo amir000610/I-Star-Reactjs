@@ -32,7 +32,7 @@ function Chart() {
         }
       })
       .catch((err) => console.log(err))
-  })
+  }, [])
   const [role, setrole] = useState('')
 
   const getinfo5 = async () => {
@@ -49,11 +49,10 @@ function Chart() {
   useEffect(() => {
     if (role === 'Tutor') {
       setShowAlert(true)
-      console.log(role)
     }
     getinfo5()
     console.log(infostd5)
-  }, [role, infostd5])
+  }, [])
   const [showAlert, setShowAlert] = useState(false)
 
   if (showAlert) {

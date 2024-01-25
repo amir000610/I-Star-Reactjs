@@ -39,7 +39,7 @@ const Dashboard = () => {
         }
       })
       .catch((err) => console.log(err))
-  })
+  }, [])
 
   const getData = async () => {
     try {
@@ -104,7 +104,16 @@ const Dashboard = () => {
       .catch((err) => console.log(err))
 
     getInstitution()
-  }, [navigate, takwim])
+  }, [])
+
+  const pdate = (idx) => {
+    const date = new Date(idx)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const newDate = `${day}-${month}-${year}`
+    return newDate
+  }
 
   if (showAlert) {
     return (
@@ -114,6 +123,9 @@ const Dashboard = () => {
       </CAlert>
     )
   }
+
+  var todaydate = new Date() // Replace this with your today date
+  // Assuming the dates are correctly formatted as JavaScript Date objects
 
   if (role === 'Admin') {
     return (
@@ -128,28 +140,17 @@ const Dashboard = () => {
               {insti?.map((idx, key) => {
                 // Filter the upcoming programs for the current institution
                 const upcomingPrograms = takwim
-                  .filter((val) => val.institution_id.toString() === idx.institution_id.toString())
-                  .filter((val) => {
-                    const startDate = new Date() // Replace this with your selected start date
-                    const endDate = new Date() // Replace this with your selected end date
-                    // Assuming the dates are correctly formatted as JavaScript Date objects
-
-                    const date = new Date(val.date)
-
-                    // Check if the program's date is within the selected range
-                    return (
-                      date >= startDate &&
-                      date <= endDate &&
-                      date.getDay() >= 0 &&
-                      date.getDay() <= 6
-                    )
-                  })
+                  .filter(
+                    (val) =>
+                      val.institution_id.toString() === idx.institution_id.toString() &&
+                      todaydate.setHours(0, 0, 0, 0) <= new Date(val.date).setHours(0, 0, 0, 0),
+                  )
                   .sort((a, b) => {
                     const dateA = new Date(a.date)
                     const dateB = new Date(b.date)
                     return dateB - dateA // Sort in descending order to get the latest date first
                   })
-
+                console.log(takwim)
                 return (
                   <CCol sm={6} lg={3} key={key}>
                     <CCallout color={color(idx.institution_id)}>
@@ -162,18 +163,15 @@ const Dashboard = () => {
                           content={
                             <div style={{ whiteSpace: 'pre-wrap' }}>
                               {upcomingPrograms.map((val, key) => {
-                                const date = new Date(val.date)
-                                const year = date.getFullYear()
-                                const month = String(date.getMonth() + 1).padStart(2, '0')
-                                const day = String(date.getDate()).padStart(2, '0')
-                                const newDate = `${year}-${month}-${day}`
                                 return (
                                   <div style={{ marginBottom: '10px' }} key={key}>
                                     Module: {val.module_name}
                                     <br />
                                     Tutor: {val.name}
                                     <br />
-                                    Date: {newDate}
+                                    Start Date: {pdate(val.date)}
+                                    <br />
+                                    End Date: {pdate(val.end_date)}
                                     <hr />
                                   </div>
                                 )

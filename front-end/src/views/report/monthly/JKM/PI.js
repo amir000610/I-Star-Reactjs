@@ -72,7 +72,7 @@ function ParticipantInfo() {
     getData()
     getinstitution()
     RKDAinstitution()
-  })
+  }, [])
   const [role, setrole] = useState('')
 
   //Alert
@@ -81,7 +81,7 @@ function ParticipantInfo() {
       setShowAlert(true)
       console.log(role)
     }
-  }, [role])
+  }, [])
   const [showAlert, setShowAlert] = useState(false)
 
   if (showAlert) {

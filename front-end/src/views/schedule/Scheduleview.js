@@ -127,7 +127,7 @@ const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
       .catch((err) => console.log(err))
     getData()
     gettutor()
-  }, [navigate])
+  }, [])
 
   return (
     <CModal visible={Tvisible} onClose={() => TsetVisible(false)} size="lg">

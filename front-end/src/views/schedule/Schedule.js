@@ -187,8 +187,7 @@ const Module = () => {
         }
       })
       .catch((err) => console.log(err))
-    console.log(loginuser)
-  }, [updatedformdata, loginuser])
+  }, [])
 
   if (role === 'Admin' || role === 'Tutor') {
     return (
