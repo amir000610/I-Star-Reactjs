@@ -132,6 +132,7 @@ app.post("/login", (req, res) => {
 
 //Verify
 app.post('/', (req, res) => {
+  console.log(req.session.role)
   if (req.session.role ) {
     return res.json({ valid: true, role: req.session.role, name: req.session.name, loginid: req.session.user });
   } else {
