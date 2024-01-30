@@ -11,7 +11,6 @@ import {
   CAlert,
   CCardTitle,
   CCardText,
-  CContainer,
 } from '@coreui/react'
 import { CChart } from '@coreui/react-chartjs'
 import { useState, useEffect } from 'react'

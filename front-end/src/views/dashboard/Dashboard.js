@@ -28,19 +28,6 @@ const Dashboard = () => {
   const [insti, setInsti] = useState([])
 
   axios.defaults.withCredentials = true
-  useEffect(() => {
-    axios
-      .post(`${config.REACT_APP_API_ENDPOINT}/`)
-      .then((res) => {
-        if (res.data.valid) {
-          setrole(res.data.role)
-        } else {
-          navigate('/login')
-        }
-      })
-      .catch((err) => console.log(err))
-  }, [])
-
   const getData = async () => {
     try {
       const getData = await axios.get(`${config.REACT_APP_API_ENDPOINT}/schedule`)
