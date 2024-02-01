@@ -75,13 +75,13 @@ function ProgrammeStatus() {
   const formattedDate = today.toLocaleDateString('en-US', options)
 
   const uniqueStatus = (x) => {
-    const uniqueStatus = Array.from(
-      new Set(
-        formdata
-          ?.filter((idx) => idx.institution_id === x && idx.type === '1')
-          .map((val) => (val.complete === 1 ? 'Delivered' : 'Not Delivered')),
-      ),
-    )
+    const uniqueStatus =
+      formdata?.filter(
+        (idx) =>
+          idx.institution_id === x && idx.type === '1' && idx.type === '2' && idx.type === '3',
+      ).length > 0
+        ? 'Delivered'
+        : 'Not Delivered'
     return uniqueStatus
   }
 
@@ -254,34 +254,72 @@ function ProgrammeStatus() {
                             </CTableDataCell>
                             <CTableDataCell>{val.learning_training_institutions}</CTableDataCell>
                             <CTableDataCell>
-                              {formdata
-                                ?.filter(
-                                  (idx) =>
-                                    idx.institution_id === val.institution_id &&
-                                    (idx.type === '2' || idx.type === '3'),
-                                )
-                                .map((val, key) => {
-                                  return (
-                                    <div key={key}>
-                                      {val.module_code} - {val.module_name}
-                                    </div>
-                                  )
-                                })}
+                              {[
+                                ...new Map(
+                                  formdata
+                                    ?.filter(
+                                      (idx) =>
+                                        idx.institution_id === val.institution_id &&
+                                        idx.type === '2' &&
+                                        idx.type === '3',
+                                    )
+                                    .map((val) => [val.module_code, val]), // Convert array to key-value pairs
+                                ).values(),
+                              ] // Get the values from the Map to retain unique modules
+                                .map((val, key) => (
+                                  <div key={key}>
+                                    {val.module_code} - {val.module_name}
+                                  </div>
+                                ))}
                             </CTableDataCell>
                             <CTableDataCell>
                               {formdata
                                 ?.filter(
                                   (idx) =>
                                     idx.institution_id === val.institution_id &&
-                                    (idx.type === '2' || idx.type === '3'),
+                                    idx.type === '2' &&
+                                    idx.type === '3',
                                 )
+                                .sort((a, b) => new Date(a.date) - new Date(b.date)) // Sort the dates in ascending order
+                                .reduce((acc, curr) => {
+                                  const lastEntry = acc[acc.length - 1]
+
+                                  if (
+                                    lastEntry &&
+                                    new Date(curr.date).getTime() -
+                                      new Date(lastEntry.endDate).getTime() <=
+                                      86400000 // Check if current date is within 1 day of the last entry's endDate
+                                  ) {
+                                    // If the current date is consecutive to the last entry, update the endDate
+                                    lastEntry.endDate = curr.end_date // Assuming the end_date attribute is 'end_date' in your database
+                                  } else {
+                                    // If not consecutive, push a new object into the accumulator array
+                                    acc.push({
+                                      startDate: curr.date,
+                                      endDate: curr.end_date, // Assuming the end_date attribute is 'end_date' in your database
+                                    })
+                                  }
+                                  return acc
+                                }, [])
                                 .map((val, key) => {
-                                  const date = new Date(val.date)
-                                  const year = date.getFullYear()
-                                  const month = String(date.getMonth() + 1).padStart(2, '0')
-                                  const day = String(date.getDate()).padStart(2, '0')
-                                  const newDate = `${year}-${month}-${day}`
-                                  return <div key={key}>{newDate}</div>
+                                  const startDate = new Date(val.startDate)
+                                  const endDate = new Date(val.endDate)
+                                  const startDay = startDate.getDate()
+                                  const startMonth = startDate.toLocaleString('default', {
+                                    month: 'long',
+                                  })
+                                  const endDay = endDate.getDate()
+                                  const endMonth = endDate.toLocaleString('default', {
+                                    month: 'long',
+                                  })
+                                  const year = startDate.getFullYear()
+
+                                  const displayDate =
+                                    startDay !== endDay
+                                      ? `${startDay} - ${endDay} ${startMonth} ${year}`
+                                      : `${startDay} ${startMonth} ${year}`
+
+                                  return <div key={key}>{displayDate}</div>
                                 })}
                             </CTableDataCell>
                             <CTableDataCell>

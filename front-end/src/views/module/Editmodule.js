@@ -41,7 +41,7 @@ function Updatedata({ openedit, setopenedit, editid, ModuleData, seteditid }) {
   }
 
   return (
-    <CModal visible={openedit} onClose={() => setopenedit(false)}>
+    <CModal visible={openedit} onClose={() => setopenedit(false)} static>
       <CModalHeader>
         <CModalTitle>Edit Module</CModalTitle>
       </CModalHeader>

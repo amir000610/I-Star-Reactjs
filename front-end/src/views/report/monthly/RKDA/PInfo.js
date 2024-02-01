@@ -98,8 +98,6 @@ function ParticipantInfo2() {
     // Constructing the table data array
     const headers = [
       'Institution',
-      '7-12 Year(M)',
-      '7-12 Year(F)',
       '13-17 Year(M)',
       '13-17 Year(F)',
       'TOTAL',
@@ -110,37 +108,12 @@ function ParticipantInfo2() {
     tableData.push(headers)
 
     // Pushing rows of data
-    institutiondata.forEach((val) => {
-      const rowData = [val.institution_id === 8]
+    Xinstitutiondata.forEach((val) => {
+      const rowData = [val.learning_training_institutions + ' (PUTERA) ']
 
       // Push individual cell data based on your table structure
       // Modify this according to your data structure
-      rowData.push(
-        StudentData?.filter(
-          (idx) =>
-            (idx.level === 'S1' ||
-              idx.level === 'S2' ||
-              idx.level === 'S3' ||
-              idx.level === 'S4' ||
-              idx.level === 'S5') &&
-            idx.gender === 'MALE' &&
-            idx.status_on_programme === 'ACTIVE' &&
-            idx.institution_id === '8',
-        ).length,
-      )
-      rowData.push(
-        StudentData?.filter(
-          (idx) =>
-            (idx.level === 'S1' ||
-              idx.level === 'S2' ||
-              idx.level === 'S3' ||
-              idx.level === 'S4' ||
-              idx.level === 'S5') &&
-            idx.gender === 'FEMALE' &&
-            idx.status_on_programme === 'ACTIVE' &&
-            idx.institution_id === '8',
-        ).length,
-      )
+
       rowData.push(
         StudentData?.filter(
           (idx) =>
@@ -150,10 +123,50 @@ function ParticipantInfo2() {
               idx.level === 'F4' ||
               idx.level === 'F5') &&
             idx.gender === 'MALE' &&
-            idx.status_on_programme === 'ACTIVE ' &&
-            idx.institution_id === '8',
+            idx.status_on_programme === 'ACTIVE' &&
+            idx.institution_id === 8,
         ).length,
       )
+      rowData.push(0)
+      rowData.push(
+        StudentData?.filter((idx) => idx.institution_id === 8 && idx.gender === 'MALE').length,
+      )
+      rowData.push(
+        StudentData?.filter(
+          (idx) =>
+            idx.status_on_programme === 'ACTIVE' &&
+            idx.institution_id === 8 &&
+            idx.gender === 'MALE',
+        ).length,
+      )
+      rowData.push(
+        StudentData?.filter(
+          (idx) =>
+            idx.status_on_programme === 'COMPLETED' &&
+            idx.institution_id === 8 &&
+            idx.gender === 'MALE',
+        ).length,
+      )
+      rowData.push(
+        StudentData?.filter(
+          (idx) =>
+            idx.status_on_programme === 'INCOMPLETE' &&
+            idx.institution_id === 8 &&
+            idx.gender === 'MALE',
+        ).length,
+      )
+
+      // Push the rowData to the tableData array
+      tableData.push(rowData)
+    })
+
+    Xinstitutiondata.forEach((val) => {
+      const rowData = [val.learning_training_institutions + ' (PUTERI) ']
+
+      // Push individual cell data based on your table structure
+      // Modify this according to your data structure
+
+      rowData.push(0)
       rowData.push(
         StudentData?.filter(
           (idx) =>
@@ -164,23 +177,34 @@ function ParticipantInfo2() {
               idx.level === 'F5') &&
             idx.gender === 'FEMALE' &&
             idx.status_on_programme === 'ACTIVE' &&
-            idx.institution_id === '8',
-        ).length,
-      )
-      rowData.push(StudentData?.filter((idx) => idx.institution_id === '8').length)
-      rowData.push(
-        StudentData?.filter(
-          (idx) => idx.status_on_programme === 'ACTIVE' && idx.institution_id === 8,
+            idx.institution_id === 8,
         ).length,
       )
       rowData.push(
+        StudentData?.filter((idx) => idx.institution_id === 8 && idx.gender === 'FEMALE').length,
+      )
+      rowData.push(
         StudentData?.filter(
-          (idx) => idx.status_on_programme === 'COMPLETED' && idx.institution_id === 8,
+          (idx) =>
+            idx.status_on_programme === 'ACTIVE' &&
+            idx.institution_id === 8 &&
+            idx.gender === 'FEMALE',
         ).length,
       )
       rowData.push(
         StudentData?.filter(
-          (idx) => idx.status_on_programme === 'INCOMPLETE' && idx.institution_id === 8,
+          (idx) =>
+            idx.status_on_programme === 'COMPLETED' &&
+            idx.institution_id === 8 &&
+            idx.gender === 'FEMALE',
+        ).length,
+      )
+      rowData.push(
+        StudentData?.filter(
+          (idx) =>
+            idx.status_on_programme === 'INCOMPLETE' &&
+            idx.institution_id === 8 &&
+            idx.gender === 'FEMALE',
         ).length,
       )
 
@@ -190,8 +214,6 @@ function ParticipantInfo2() {
 
     const footer = [
       'Total',
-      '',
-      '',
       '',
       '',
       StudentData?.filter((idx) => idx.institution_id === 8).length,
@@ -208,6 +230,21 @@ function ParticipantInfo2() {
 
     // Creating a worksheet
     const worksheet = XLSX.utils.aoa_to_sheet(tableData)
+
+    // Set column widths (you can adjust these values based on your needs)
+    const colWidths = [
+      { wch: 15 }, // Institution
+      { wch: 15 }, // 13-17 Year(M)
+      { wch: 15 }, // 13-17 Year(F)
+      { wch: 15 }, // TOTAL
+      { wch: 15 }, // ACTIVE
+      { wch: 15 }, // Completed
+      { wch: 15 }, // Incomplete
+    ]
+
+    // Apply column widths to the worksheet
+    worksheet['!cols'] = colWidths
+
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1')
 
     // Save the workbook as an Excel file

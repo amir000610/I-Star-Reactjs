@@ -34,6 +34,7 @@ import {
 } from '@coreui/react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import UpdateStudent from './Edit'
 import packageJson from '../../../package.json'
 const { config } = packageJson
 
@@ -53,6 +54,8 @@ const PDregister = () => {
   const [currentIns, setCurrentIns] = useState('1')
   const [institution, setInstitution] = useState([])
   const [showAlert, setShowAlert] = useState(false)
+  const [openedit, setopenedit] = useState(false)
+  const [editid, seteditid] = useState()
 
   //fetchDataStudent
   const getData = async (e) => {
@@ -543,6 +546,14 @@ const PDregister = () => {
                                     <CIcon icon={cilOptions} />
                                   </CDropdownToggle>
                                   <CDropdownMenu>
+                                    <CDropdownItem
+                                      onClick={(e) => {
+                                        seteditid(filteredData[key])
+                                        setopenedit(!openedit)
+                                      }}
+                                    >
+                                      Edit
+                                    </CDropdownItem>
                                     <CDropdownItem onClick={() => onDelete(val.scholar_id)}>
                                       Delete
                                     </CDropdownItem>
@@ -570,6 +581,13 @@ const PDregister = () => {
             </CCardBody>
           </CCard>
         </CCol>
+        <UpdateStudent
+          openedit={openedit}
+          setopenedit={setopenedit}
+          editid={editid}
+          StudentData={StudentData}
+          seteditid={seteditid}
+        />
       </CRow>
     )
   }

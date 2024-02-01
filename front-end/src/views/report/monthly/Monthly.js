@@ -26,6 +26,7 @@ import ProgrammeStatus from '../monthly/JKM/PS'
 import ParticipantInfo2 from './RKDA/PInfo'
 import Programme2 from './RKDA/Prog2'
 import ProgrammeStatus2 from './RKDA/PStatus'
+import ScrollToTopButton from './scrolltotop'
 import Chart from './RKDA/Chart'
 
 import packageJson from '../../../../package.json'
@@ -100,6 +101,7 @@ function Monthly() {
   const options = { day: 'numeric', month: 'long', year: 'numeric' }
   const formattedDate = today.toLocaleDateString('en-US', options)
 
+  //smbng button scroll to top
   if (role === 'Admin') {
     return (
       <div>
@@ -115,6 +117,7 @@ function Monthly() {
               </CContainer>
             </CAccordionHeader>
             <CAccordionBody>
+              <ScrollToTopButton />
               <CRow>
                 <CCol xs={12}>
                   <CCard className="mb-4">

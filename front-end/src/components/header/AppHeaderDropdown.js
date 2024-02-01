@@ -14,8 +14,6 @@ import { useNavigate } from 'react-router-dom'
 //import avatar10 from './../../assets/images/avatars/10.jpg'
 import axios from 'axios'
 import { CToaster, CToast, CToastHeader, CToastBody } from '@coreui/react'
-import 'react-toastify/dist/ReactToastify.css'
-import { useToasts } from 'react-toast-notifications'
 import packageJson from '../../../package.json'
 const { config } = packageJson
 

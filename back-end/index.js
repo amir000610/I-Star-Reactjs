@@ -132,7 +132,6 @@ app.post("/login", (req, res) => {
 
 //Verify
 app.post('/', (req, res) => {
-  console.log(req.session.role)
   if (req.session.role ) {
     return res.json({ valid: true, role: req.session.role, name: req.session.name, loginid: req.session.user });
   } else {
@@ -336,6 +335,24 @@ app.post("/addpd" , (req,res) => {
       if (err) console.log(err)
       return res.send(data)
   })
+  })
+})
+
+//editStudent
+app.post("/editstudent" , (req,res) => {
+  const { editid } = req.body
+  const sql = "UPDATE student SET student.status_on_programme = ? , student.class_AAP_eng = ?, student.class_AAP_math = ?, student.class_Ndp = ? WHERE student.scholar_id = ?"
+  const values = [
+    editid.status_on_programme,
+    editid.class_AAP_eng,
+    editid.class_AAP_math,
+    editid.class_Ndp,
+    editid.scholar_id
+  ];
+
+  db.query(sql, [editid.status_on_programme,editid.class_AAP_eng,editid.class_AAP_math,editid.class_Ndp,editid.scholar_id],(err,data) => {
+      if (err) console.log(err)
+      return res.send(data)
   })
 })
 
