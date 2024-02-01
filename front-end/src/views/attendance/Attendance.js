@@ -21,7 +21,6 @@ import {
   CCardFooter,
   CButton,
   CFormTextarea,
-  CFormInput,
   CAlert,
   CFormCheck,
 } from '@coreui/react'
@@ -163,9 +162,15 @@ const Attnd = () => {
 
   const uncheckAll = () => {
     setIsChecked({})
+    const newArray = [...otherres]
     filteredData.forEach((val, key) => {
       checkattnd(key, 0, val.schedule_id, val.scholar_id) // Assuming 0 represents unselected
+      newArray[key] = {
+        ...newArray[key],
+        checkstd: 0, // Set checkstd to 0 for "Not Attend"
+      }
     })
+    setotherres(newArray)
   }
 
   const todaydate = new Date()
@@ -248,7 +253,9 @@ const Attnd = () => {
     getData()
     getform()
     gettutor()
+    console.log(setIsChecked)
   }, [])
+  console.log(otherres)
 
   if (role === 'Admin') {
     return (

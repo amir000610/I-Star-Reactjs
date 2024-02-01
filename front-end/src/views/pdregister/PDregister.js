@@ -13,6 +13,7 @@ import {
   CDropdownItem,
   CFormSelect,
   CAlert,
+  CFormCheck,
   CCard,
   CBadge,
   CFormInput,
@@ -42,52 +43,17 @@ const PDregister = () => {
   const [visible, setvisible] = useState(false)
   const tableRef = useRef(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isChecked, setIsChecked] = useState(false)
+  const [otherres, setotherres] = useState([{ checkstd: '', stdid: '' }])
+  const [bool, setbool] = useState(false)
+  const navigate = useNavigate()
+  const [role, setrole] = useState('')
+  const [StudentData, setstudent] = useState([])
+  const [filteredData, setFilteredData] = useState([])
+  const [currentIns, setCurrentIns] = useState('1')
+  const [institution, setInstitution] = useState([])
+  const [showAlert, setShowAlert] = useState(false)
 
-  const excelDateToJSDate = (excelDate) => {
-    const date = new Date((excelDate - 25569) * 86400 * 1000)
-    return date.toISOString().split('T')[0]
-  }
-
-  const isValidDate = (value) => {
-    return !isNaN(new Date(value).getTime())
-  }
-
-  const processExcel = (workbook) => {
-    const sheet = workbook.Sheets[workbook.SheetNames[0]]
-    const dataArray = XLSX.utils.sheet_to_json(sheet, { header: 1 })
-
-    if (dataArray.length > 0) {
-      const headers = dataArray[0]
-      const newArray = dataArray.slice(1).map((row) => {
-        const eachObject = headers.reduce((obj, header, i) => {
-          obj[header] = row[i]
-          return obj
-        }, {})
-        return eachObject
-      })
-      setExcelArray(newArray)
-    }
-  }
-
-  //submitFile
-  const submit = () => {
-    if (excelFile) {
-      const file = excelFile
-      const reader = new FileReader()
-
-      reader.onload = function (e) {
-        const data = e.target.result
-        const workbook = XLSX.read(data, { type: 'binary' })
-        processExcel(workbook)
-
-        for (let x = 0; x < excelArray.length; x++) {
-          postData(excelArray[x])
-        }
-      }
-
-      reader.readAsBinaryString(file) // Read file as binary string
-    }
-  }
   //fetchDataStudent
   const getData = async (e) => {
     try {
@@ -97,7 +63,6 @@ const PDregister = () => {
       console.log(err)
     }
   }
-  const [StudentData, setstudent] = useState([])
 
   //FetchDataInstitution
   const fetchInstitution = async () => {
@@ -114,32 +79,6 @@ const PDregister = () => {
     }
   }
 
-  //View with filterData
-  const handleView = () => {
-    const filteredData = StudentData?.filter((val) => val.institution_id.toString() === currentIns)
-    setFilteredData(filteredData)
-  }
-  const [filteredData, setFilteredData] = useState([])
-  const [currentIns, setCurrentIns] = useState('1')
-
-  useEffect(() => {
-    getData()
-    fetchInstitution()
-  }, [])
-
-  //DeleteButton
-  const onDelete = async (id) => {
-    try {
-      await axios.post(`${config.REACT_APP_API_ENDPOINT}/deletestudent`, { id })
-      window.location.reload()
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const [institution, setInstitution] = useState([])
-
-  axios.defaults.withCredentials = true
   //InsertData
   const postData = async (data) => {
     try {
@@ -211,6 +150,79 @@ const PDregister = () => {
     }
   }
 
+  //submitFile
+  const submit = () => {
+    if (excelFile) {
+      const file = excelFile
+      const reader = new FileReader()
+
+      reader.onload = function (e) {
+        const data = e.target.result
+        const workbook = XLSX.read(data, { type: 'binary' })
+        processExcel(workbook)
+
+        for (let x = 0; x < excelArray.length; x++) {
+          postData(excelArray[x])
+        }
+      }
+
+      reader.readAsBinaryString(file) // Read file as binary string
+    }
+  }
+
+  const excelDateToJSDate = (excelDate) => {
+    const date = new Date((excelDate - 25569) * 86400 * 1000)
+    return date.toISOString().split('T')[0]
+  }
+
+  const isValidDate = (value) => {
+    return !isNaN(new Date(value).getTime())
+  }
+
+  const processExcel = (workbook) => {
+    const sheet = workbook.Sheets[workbook.SheetNames[0]]
+    const dataArray = XLSX.utils.sheet_to_json(sheet, { header: 1 })
+
+    if (dataArray.length > 0) {
+      const headers = dataArray[0]
+      const newArray = dataArray.slice(1).map((row) => {
+        const eachObject = headers.reduce((obj, header, i) => {
+          obj[header] = row[i]
+          return obj
+        }, {})
+        return eachObject
+      })
+      setExcelArray(newArray)
+    }
+  }
+
+  //View with filterData
+  const handleView = () => {
+    const filteredData = StudentData?.filter((val) => val.institution_id.toString() === currentIns)
+    setFilteredData(filteredData)
+    StudentData?.filter((val) => val.institution_id.toString() === currentIns).forEach(
+      (val, index) => {
+        const var1 = 'checkstd'
+        const var2 = 'stdid'
+        const newarray = [...otherres]
+        newarray[index] = { ...newarray[index], [var1]: '' }
+        newarray[index] = { ...newarray[index], [var2]: val.scholar_id }
+        console.log(newarray)
+        setotherres(newarray)
+      },
+    )
+  }
+
+  //DeleteButton
+  const onDelete = async (id) => {
+    try {
+      await axios.post(`${config.REACT_APP_API_ENDPOINT}/deletestudent`, { id })
+      window.location.reload()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   //Badge Status
   const getColorByStatus = (status) => {
     switch (status) {
@@ -225,22 +237,7 @@ const PDregister = () => {
     }
   }
 
-  //Login Credential
-  useEffect(() => {
-    axios
-      .post(`${config.REACT_APP_API_ENDPOINT}/`)
-      .then((res) => {
-        if (res.data.valid) {
-          setrole(res.data.role)
-        } else {
-          navigate('/login')
-        }
-      })
-      .catch((err) => console.log(err))
-  })
-  const navigate = useNavigate()
-  const [role, setrole] = useState('')
-
+  //generate Excel
   const generateExcel = () => {
     const workbook = new ExcelJS.Workbook()
     const worksheet = workbook.addWorksheet('List Name') // Sheet name
@@ -303,14 +300,33 @@ const PDregister = () => {
     data.full_name.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
+  //Login Credential
+  useEffect(() => {
+    axios
+      .post(`${config.REACT_APP_API_ENDPOINT}/`)
+      .then((res) => {
+        if (res.data.valid) {
+          setrole(res.data.role)
+        } else {
+          navigate('/login')
+        }
+      })
+      .catch((err) => console.log(err))
+  })
+
+  axios.defaults.withCredentials = true
   //Alert
-  const [showAlert, setShowAlert] = useState(false)
   useEffect(() => {
     if (role === 'Tutor') {
       setShowAlert(true)
-      console.log(role)
     }
-  }, [role])
+    getData()
+    fetchInstitution()
+  }, [])
+
+  useEffect(() => {
+    console.log(otherres)
+  })
 
   if (showAlert) {
     return (
@@ -319,6 +335,16 @@ const PDregister = () => {
         You dont have permission to view this component.
       </CAlert>
     )
+  }
+
+  const checkattnd = (index, newcheck, newStdId) => {
+    const checkstd = 'checkstd'
+    const stdid = 'stdid'
+    const newArray = [...otherres]
+    newArray[index] = { ...newArray[index], [stdid]: newStdId }
+    newArray[index] = { ...newArray[index], [checkstd]: newcheck }
+    console.log(newArray)
+    setotherres(newArray)
   }
 
   if (role === 'Admin') {
@@ -409,14 +435,27 @@ const PDregister = () => {
                             </CTableDataCell>
                           </CTableRow>
                           <CTableRow>
-                            <CCol>
+                            <CTableDataCell>
                               <CFormInput
                                 className="mt-2"
                                 placeholder="Search Student Name..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                               />
-                            </CCol>
+                            </CTableDataCell>
+                          </CTableRow>
+                          <CTableRow>
+                            <CTableDataCell colSpan={3}>
+                              <CButton>Select All</CButton>
+                              <CButton style={{ marginLeft: '10px' }}>Unselect All</CButton>
+                              {bool === true ? (
+                                <CButton style={{ marginLeft: '10px' }} onClick>
+                                  Delete
+                                </CButton>
+                              ) : (
+                                ''
+                              )}
+                            </CTableDataCell>
                           </CTableRow>
                         </CTableBody>
                       </CTable>
@@ -440,7 +479,7 @@ const PDregister = () => {
                               <CTableHeaderCell scope="col" rowSpan={2}>
                                 <center>Status</center>
                               </CTableHeaderCell>
-                              <CTableHeaderCell scope="col" colSpan={3}>
+                              <CTableHeaderCell scope="col" colSpan={4}>
                                 <center>Class</center>
                               </CTableHeaderCell>
                               <CTableHeaderCell scope="col"></CTableHeaderCell>
@@ -455,6 +494,7 @@ const PDregister = () => {
                               <CTableHeaderCell scope="col">
                                 <center>AAP English</center>
                               </CTableHeaderCell>
+                              <CTableHeaderCell scope="col"></CTableHeaderCell>
                               <CTableHeaderCell scope="col"></CTableHeaderCell>
                             </CTableRow>
                           </>
@@ -508,6 +548,16 @@ const PDregister = () => {
                                     </CDropdownItem>
                                   </CDropdownMenu>
                                 </CDropdown>
+                              </CTableDataCell>
+                              <CTableDataCell>
+                                <div>
+                                  <CFormCheck
+                                    type="checkbox"
+                                    defaultChecked={isChecked[key] === 1} // For "Attend"
+                                    onChange={() => {}}
+                                    label=""
+                                  />
+                                </div>
                               </CTableDataCell>
                             </CTableRow>
                           )
