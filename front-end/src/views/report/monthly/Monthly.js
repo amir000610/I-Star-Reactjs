@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import axios from 'axios'
 import CIcon from '@coreui/icons-react'
 import {
@@ -14,10 +14,13 @@ import {
   CContainer,
   CAccordion,
   CAccordionItem,
+  CButton,
   CAccordionHeader,
   CAccordionBody,
 } from '@coreui/react'
 import { CChart } from '@coreui/react-chartjs'
+import html2canvas from 'html2canvas'
+import { saveAs } from 'file-saver'
 import { useState, useEffect } from 'react'
 import { cilWarning } from '@coreui/icons'
 import Programme from '../monthly/JKM/Prog'
@@ -28,11 +31,13 @@ import Programme2 from './RKDA/Prog2'
 import ProgrammeStatus2 from './RKDA/PStatus'
 import ScrollToTopButton from './scrolltotop'
 import Chart from './RKDA/Chart'
+import * as XLSX from 'xlsx'
 
 import packageJson from '../../../../package.json'
 const { config } = packageJson
 
 function Monthly() {
+  const chartRef = useRef(null)
   //Login Credential
   axios.defaults.withCredentials = true
   useEffect(() => {
@@ -101,6 +106,24 @@ function Monthly() {
   const options = { day: 'numeric', month: 'long', year: 'numeric' }
   const formattedDate = today.toLocaleDateString('en-US', options)
 
+  const exportToImage = () => {
+    // Get the chart canvas element
+    const chartCanvas = chartRef.current.chartInstance.canvas
+
+    // Use html2canvas to convert the chart to an image
+    html2canvas(chartCanvas).then((canvas) => {
+      // Convert canvas to a data URL
+      const dataUrl = canvas.toDataURL()
+
+      // Use FileSaver.js to save the data URL as an image file
+      saveAs(dataUrl, 'chart.png')
+    })
+  }
+
+  const handleChartRender = (chartInstance) => {
+    chartRef.current = chartInstance
+  }
+
   //smbng button scroll to top
   if (role === 'Admin') {
     return (
@@ -117,7 +140,6 @@ function Monthly() {
               </CContainer>
             </CAccordionHeader>
             <CAccordionBody>
-              <ScrollToTopButton />
               <CRow>
                 <CCol xs={12}>
                   <CCard className="mb-4">
@@ -125,8 +147,11 @@ function Monthly() {
                       <strong>CURRENT NUMBERS</strong>
                     </CCardHeader>
                     <CCardBody>
-                      <CCardTitle>TBGJ21 TOTAL REGISTERED</CCardTitle>
-                      <span>As at: {formattedDate}</span>
+                      <CCardTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        TBGJ21 TOTAL REGISTERED
+                        <span>As at: {formattedDate}</span>
+                        {''} <CButton onClick={exportToImage}>Export Chart</CButton>
+                      </CCardTitle>
                       <CRow>
                         <CCol xs={4}>
                           <CCallout>
@@ -152,6 +177,7 @@ function Monthly() {
                       <CRow>
                         <CCol xs={6}>
                           <CChart
+                            ref={chartRef}
                             type="pie"
                             data={data}
                             options={{
@@ -162,6 +188,7 @@ function Monthly() {
                                 },
                               },
                             }}
+                            onRender={handleChartRender}
                           />
                         </CCol>
                         <CCol xs={6}>
@@ -179,6 +206,7 @@ function Monthly() {
                           />
                         </CCol>
                       </CRow>
+                      <ScrollToTopButton />
                     </CCardBody>
                   </CCard>
                 </CCol>

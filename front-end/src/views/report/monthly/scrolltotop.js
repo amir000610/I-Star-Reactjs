@@ -27,11 +27,29 @@ const ScrollToTopButton = () => {
     })
   }
 
+  const buttonStyle = {
+    position: 'fixed',
+    bottom: '20px',
+    right: '20px',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    padding: '10px 15px',
+    cursor: 'pointer',
+    outline: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '14px',
+    zIndex: '999',
+  }
+
   return (
     <div>
       {isVisible && (
-        <CButton className="scroll-to-top-button" onClick={scrollToTop}>
-          Scroll to Top
+        <CButton className="scroll-to-top-button" style={buttonStyle} onClick={scrollToTop}>
+          Go to Top
         </CButton>
       )}
     </div>

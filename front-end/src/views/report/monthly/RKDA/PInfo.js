@@ -20,6 +20,7 @@ import {
   CTableHeaderCell,
   CTableDataCell,
 } from '@coreui/react'
+import ScrollToTopButton from '../scrolltotop'
 import { useState, useEffect } from 'react'
 import { cilWarning } from '@coreui/icons'
 
@@ -255,8 +256,6 @@ function ParticipantInfo2() {
   const options = { day: 'numeric', month: 'long', year: 'numeric' }
   const formattedDate = today.toLocaleDateString('en-US', options)
 
-  console.log(StudentData.filter((idx) => idx.institution_id === 8))
-
   if (role === 'Admin') {
     return (
       <div>
@@ -267,6 +266,7 @@ function ParticipantInfo2() {
                 <strong>PARTICIPANTS INFORMATION</strong>
               </CCardHeader>
               <CCardBody>
+                <ScrollToTopButton />
                 <CCardTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
                   As at: {formattedDate}
                   {''} <CButton onClick={exportToExcel}>Export to Excel</CButton>

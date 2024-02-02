@@ -18,6 +18,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarDays, faHourglassHalf } from '@fortawesome/free-solid-svg-icons'
+import ScrollToTopButton from '../report/monthly/scrolltotop'
 import packageJson from '../../../package.json'
 const { config } = packageJson
 
@@ -123,6 +124,7 @@ const Dashboard = () => {
             <FontAwesomeIcon icon={faCalendarDays} /> <strong>Takwim Per Week</strong>
           </CCardHeader>
           <CCardBody>
+            <ScrollToTopButton />
             <CRow>
               {insti?.map((idx, key) => {
                 // Filter the upcoming programs for the current institution
