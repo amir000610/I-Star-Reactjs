@@ -150,7 +150,7 @@ function Monthly() {
                       <CCardTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
                         TBGJ21 TOTAL REGISTERED
                         <span>As at: {formattedDate}</span>
-                        {''} <CButton onClick={exportToImage}>Export Chart</CButton>
+                        {/*{''} <CButton onClick={exportToImage}>Export Chart</CButton>*/}
                       </CCardTitle>
                       <CRow>
                         <CCol xs={4}>

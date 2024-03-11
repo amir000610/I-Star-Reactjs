@@ -70,6 +70,8 @@ const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
       Date: newDate,
       Institution: val.institution_name,
       Module: val.module_name,
+      AdminNote: val.comment,
+      TutorNote: val.comment_ttr,
     }
   })
 
@@ -90,6 +92,12 @@ const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
 
     // Add data rows
     exportData.forEach((row) => worksheet.addRow(row))
+
+    // Add Admin Note
+    worksheet.addRow(['Admin Note:', exportData[0].AdminNote])
+
+    // Add Tutor Note
+    worksheet.addRow(['Tutor Note:', exportData[0].TutorNote])
 
     workbook.xlsx.writeBuffer().then((buffer) => {
       const data = new Blob([buffer], {
@@ -132,7 +140,7 @@ const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
   return (
     <CModal visible={Tvisible} onClose={() => TsetVisible(false)} size="lg">
       <CCardHeader>
-        {TutorData?.filter((idx) => idx.schedule_id === schedule_id && idx.class_Ndp === idx.class)
+        {TutorData?.filter((idx) => idx.schedule_id === schedule_id)
           .slice(0, 1)
           .map((val, key) => {
             const date = new Date(val.date)

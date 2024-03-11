@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -17,6 +17,7 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import FaceRecognition from './Face'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import logo from 'src/assets/brand/i-star logo (2).png'
 import packageJson from '../../../../package.json'
@@ -24,6 +25,7 @@ const { config } = packageJson
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const [face, setface] = useState()
   const [values, setvalues] = useState({
     email: '',
     password: '',
@@ -60,6 +62,26 @@ const Login = () => {
     })
   }
 
+  const handleFaceDetected = async (detections) => {
+    try {
+      await axios.get(`${config.REACT_APP_API_ENDPOINT}/face-login`).then((response) => {
+        if (response) {
+          setface(response.data)
+        }
+      })
+    } catch (error) {
+      console.error(error)
+    }
+    console.log(detections) // For demonstration, you can add your logic to authenticate users based on face recognition here
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleFaceDetected()
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <div
@@ -90,6 +112,7 @@ const Login = () => {
                   </CRow>
                   <h2>Login</h2>
                   <h6>Welcome Back! Please enter your detail.</h6>
+                  {/*<FaceRecognition onFaceDetected={handleFaceDetected} />*/}
                   <CInputGroup className="mb-2">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />

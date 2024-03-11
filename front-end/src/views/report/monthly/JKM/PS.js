@@ -1,7 +1,16 @@
 import React from 'react'
 import axios from 'axios'
 import CIcon from '@coreui/icons-react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow, CAlert, CCardTitle } from '@coreui/react'
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+  CAlert,
+  CCardTitle,
+  CButton,
+} from '@coreui/react'
 import {
   CTableBody,
   CTable,
@@ -10,6 +19,7 @@ import {
   CTableHeaderCell,
   CTableDataCell,
 } from '@coreui/react'
+import * as XLSX from 'xlsx'
 import { useState, useEffect } from 'react'
 import { cilWarning } from '@coreui/icons'
 
@@ -85,6 +95,20 @@ function ProgrammeStatus() {
     return uniqueStatus
   }
 
+  const exportNDPToExcel = () => {
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.table_to_sheet(document.getElementById('ndpTable'))
+    XLSX.utils.book_append_sheet(wb, ws, 'NDP')
+    XLSX.writeFile(wb, 'NDP_program_status.xlsx')
+  }
+
+  const exportAAPToExcel = () => {
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.table_to_sheet(document.getElementById('aapTable'))
+    XLSX.utils.book_append_sheet(wb, ws, 'AAP')
+    XLSX.writeFile(wb, 'AAP_program_status.xlsx')
+  }
+
   if (role === 'Admin') {
     return (
       <div>
@@ -95,9 +119,12 @@ function ProgrammeStatus() {
                 <strong>PROGRAMME STATUS</strong>
               </CCardHeader>
               <CCardBody>
-                <CCardTitle>As at: {formattedDate}</CCardTitle>
+                <CCardTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  As at: {formattedDate}
+                  {''} <CButton onClick={exportNDPToExcel}>Export To Excel</CButton>
+                </CCardTitle>
                 <h4>Nurture and Development Programme (NDP)</h4>
-                <CTable style={{ overflow: 'hidden' }} responsive bordered>
+                <CTable id="ndpTable" style={{ overflow: 'hidden' }} responsive bordered>
                   <CTableHead color="dark">
                     <CTableRow>
                       <CTableHeaderCell scope="col">
@@ -219,8 +246,11 @@ function ProgrammeStatus() {
                 </CTable>
               </CCardBody>
               <CCardBody>
-                <h4>Academic Assistance Programme (AAP)</h4>
-                <CTable style={{ overflow: 'hidden' }} responsive bordered>
+                <CCardTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <h4>Academic Assistance Programme (AAP)</h4>
+                  {''} <CButton onClick={exportAAPToExcel}>Export To Excel</CButton>
+                </CCardTitle>
+                <CTable id="aapTable" style={{ overflow: 'hidden' }} responsive bordered>
                   <CTableHead color="dark">
                     <CTableRow>
                       <CTableHeaderCell scope="col">
@@ -256,12 +286,11 @@ function ProgrammeStatus() {
                             <CTableDataCell>
                               {[
                                 ...new Map(
-                                  formdata
-                                    ?.filter(
+                                  (formdata || [])
+                                    .filter(
                                       (idx) =>
                                         idx.institution_id === val.institution_id &&
-                                        idx.type === '2' &&
-                                        idx.type === '3',
+                                        (idx.type === '2' || idx.type === '3'), // Filter condition using logical OR
                                     )
                                     .map((val) => [val.module_code, val]), // Convert array to key-value pairs
                                 ).values(),
@@ -276,8 +305,8 @@ function ProgrammeStatus() {
                               {formdata
                                 ?.filter(
                                   (idx) =>
-                                    idx.institution_id === val.institution_id &&
-                                    idx.type === '2' &&
+                                    (idx.institution_id === val.institution_id &&
+                                      idx.type === '2') ||
                                     idx.type === '3',
                                 )
                                 .sort((a, b) => new Date(a.date) - new Date(b.date)) // Sort the dates in ascending order
@@ -323,31 +352,21 @@ function ProgrammeStatus() {
                                 })}
                             </CTableDataCell>
                             <CTableDataCell>
-                              {formdata
-                                ?.filter(
-                                  (idx) =>
-                                    idx.institution_id === val.institution_id &&
-                                    (idx.type === '2' || idx.type === '3'),
-                                )
-                                .map((val, key) => {
-                                  return <div key={key}>{val.hour} Hours</div>
-                                })}
+                              {[
+                                ...new Set(
+                                  formdata
+                                    ?.filter(
+                                      (idx) =>
+                                        idx.institution_id === val.institution_id &&
+                                        (idx.type === '2' || idx.type === '3'), // Filter condition using logical OR
+                                    )
+                                    .map((val) => val.hour),
+                                ),
+                              ].map((hour, key) => (
+                                <div key={key}>{hour} Hours</div>
+                              ))}
                             </CTableDataCell>
-                            <CTableDataCell>
-                              {formdata
-                                ?.filter(
-                                  (idx) =>
-                                    idx.institution_id === val.institution_id &&
-                                    (idx.type === '2' || idx.type === '3'),
-                                )
-                                .map((val, key) => {
-                                  return (
-                                    <div key={key}>
-                                      {val.complete === 1 ? 'Delivered' : 'Not Delivered'}
-                                    </div>
-                                  )
-                                })}
-                            </CTableDataCell>
+                            <CTableDataCell>{uniqueStatus(val.institution_id)}</CTableDataCell>
                           </CTableRow>
                         )
                       })}

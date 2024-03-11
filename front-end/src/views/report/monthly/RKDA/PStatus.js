@@ -9,7 +9,9 @@ import {
   CTableRow,
   CTableHeaderCell,
   CTableDataCell,
+  CButton,
 } from '@coreui/react'
+import * as XLSX from 'xlsx'
 import { useState, useEffect } from 'react'
 import { cilWarning } from '@coreui/icons'
 
@@ -85,6 +87,20 @@ function ProgrammeStatus2() {
     return uniqueStatus
   }
 
+  const exportNDPToExcel = () => {
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.table_to_sheet(document.getElementById('NDPTable'))
+    XLSX.utils.book_append_sheet(wb, ws, 'NDP')
+    XLSX.writeFile(wb, 'NDP_program_status.xlsx')
+  }
+
+  const exportAAPToExcel = () => {
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.table_to_sheet(document.getElementById('AAPTable'))
+    XLSX.utils.book_append_sheet(wb, ws, 'AAP')
+    XLSX.writeFile(wb, 'AAP_program_status.xlsx')
+  }
+
   if (role === 'Admin') {
     return (
       <div>
@@ -95,9 +111,12 @@ function ProgrammeStatus2() {
                 <strong>PROGRAMME STATUS</strong>
               </CCardHeader>
               <CCardBody>
-                <CCardTitle>As at: {formattedDate}</CCardTitle>
+                <CCardTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  As at: {formattedDate}
+                  {''} <CButton onClick={exportNDPToExcel}>Export To Excel</CButton>
+                </CCardTitle>
                 <h4>Nurture and Development Programme (NDP)</h4>
-                <CTable style={{ overflow: 'hidden' }} responsive bordered>
+                <CTable id="NDPTable" style={{ overflow: 'hidden' }} responsive bordered>
                   <CTableHead color="dark">
                     <CTableRow>
                       <CTableHeaderCell scope="col">
@@ -222,8 +241,11 @@ function ProgrammeStatus2() {
                 </CTable>
               </CCardBody>
               <CCardBody>
-                <h4>Academic Assistance Programme (AAP)</h4>
-                <CTable style={{ overflow: 'hidden' }} responsive bordered>
+                <CCardTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <h4>Academic Assistance Programme (AAP)</h4>
+                  {''} <CButton onClick={exportAAPToExcel}>Export To Excel</CButton>
+                </CCardTitle>
+                <CTable id="AAPTable" style={{ overflow: 'hidden' }} responsive bordered>
                   <CTableHead color="dark">
                     <CTableRow>
                       <CTableHeaderCell scope="col">
@@ -260,62 +282,91 @@ function ProgrammeStatus2() {
                               Puteri
                             </CTableDataCell>
                             <CTableDataCell>
-                              {formdata
-                                ?.filter(
-                                  (idx) =>
-                                    idx.institution_id === val.institution_id &&
-                                    (idx.type === '2' || idx.type === '3'),
-                                )
-                                .map((val, key) => {
-                                  return (
-                                    <div key={key}>
-                                      {val.module_code} - {val.module_name}
-                                    </div>
-                                  )
-                                })}
+                              {[
+                                ...new Map(
+                                  (formdata || [])
+                                    .filter(
+                                      (idx) =>
+                                        idx.institution_id === val.institution_id &&
+                                        (idx.type === '2' || idx.type === '3'), // Filter condition using logical OR
+                                    )
+                                    .map((val) => [val.module_code, val]), // Convert array to key-value pairs
+                                ).values(),
+                              ] // Get the values from the Map to retain unique modules
+                                .map((val, key) => (
+                                  <div key={key}>
+                                    {val.module_code} - {val.module_name}
+                                  </div>
+                                ))}
                             </CTableDataCell>
                             <CTableDataCell>
                               {formdata
                                 ?.filter(
                                   (idx) =>
-                                    idx.institution_id === val.institution_id &&
-                                    (idx.type === '2' || idx.type === '3'),
+                                    (idx.institution_id === val.institution_id &&
+                                      idx.type === '2') ||
+                                    idx.type === '3',
                                 )
+                                .sort((a, b) => new Date(a.date) - new Date(b.date)) // Sort the dates in ascending order
+                                .reduce((acc, curr) => {
+                                  const lastEntry = acc[acc.length - 1]
+
+                                  if (
+                                    lastEntry &&
+                                    new Date(curr.date).getTime() -
+                                      new Date(lastEntry.endDate).getTime() <=
+                                      86400000 // Check if current date is within 1 day of the last entry's endDate
+                                  ) {
+                                    // If the current date is consecutive to the last entry, update the endDate
+                                    lastEntry.endDate = curr.end_date // Assuming the end_date attribute is 'end_date' in your database
+                                  } else {
+                                    // If not consecutive, push a new object into the accumulator array
+                                    acc.push({
+                                      startDate: curr.date,
+                                      endDate: curr.end_date, // Assuming the end_date attribute is 'end_date' in your database
+                                    })
+                                  }
+                                  return acc
+                                }, [])
                                 .map((val, key) => {
-                                  const date = new Date(val.date)
-                                  const year = date.getFullYear()
-                                  const month = String(date.getMonth() + 1).padStart(2, '0')
-                                  const day = String(date.getDate()).padStart(2, '0')
-                                  const newDate = `${year}-${month}-${day}`
-                                  return <div key={key}>{newDate}</div>
+                                  const startDate = new Date(val.startDate)
+                                  const endDate = new Date(val.endDate)
+                                  const startDay = startDate.getDate()
+                                  const startMonth = startDate.toLocaleString('default', {
+                                    month: 'long',
+                                  })
+                                  const endDay = endDate.getDate()
+                                  const endMonth = endDate.toLocaleString('default', {
+                                    month: 'long',
+                                  })
+                                  const year = startDate.getFullYear()
+
+                                  const displayDate =
+                                    startDay !== endDay
+                                      ? `${startDay} - ${endDay} ${startMonth} ${year}`
+                                      : `${startDay} ${startMonth} ${year}`
+
+                                  return <div key={key}>{displayDate}</div>
                                 })}
                             </CTableDataCell>
                             <CTableDataCell>
-                              {formdata
-                                ?.filter(
-                                  (idx) =>
-                                    idx.institution_id === val.institution_id &&
-                                    (idx.type === '2' || idx.type === '3'),
-                                )
-                                .map((val, key) => {
-                                  return <div key={key}>{val.hour} Hours</div>
-                                })}
+                              <CTableDataCell>
+                                {[
+                                  ...new Set(
+                                    formdata
+                                      ?.filter(
+                                        (idx) =>
+                                          idx.institution_id === val.institution_id &&
+                                          (idx.type === '2' || idx.type === '3'), // Filter condition using logical OR
+                                      )
+                                      .map((val) => val.hour),
+                                  ),
+                                ].map((hour, key) => (
+                                  <div key={key}>{hour} Hours</div>
+                                ))}
+                              </CTableDataCell>
                             </CTableDataCell>
-                            <CTableDataCell>
-                              {formdata
-                                ?.filter(
-                                  (idx) =>
-                                    idx.institution_id === val.institution_id &&
-                                    (idx.type === '2' || idx.type === '3'),
-                                )
-                                .map((val, key) => {
-                                  return (
-                                    <div key={key}>
-                                      {val.complete === 1 ? 'Delivered' : 'Not Delivered'}
-                                    </div>
-                                  )
-                                })}
-                            </CTableDataCell>
+                            <CTableDataCell>{uniqueStatus(val.institution_id)}</CTableDataCell>
                           </CTableRow>
                         )
                       })}

@@ -99,8 +99,10 @@ function Chart() {
                 <strong>CURRENT NUMBERS</strong>
               </CCardHeader>
               <CCardBody>
-                <CCardTitle>TBGD21 TOTAL REGISTERED</CCardTitle>
-                <span>As at: {formattedDate}</span>
+                <CCardTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  TBGD21 TOTAL REGISTERED
+                  <span>As at: {formattedDate}</span>
+                </CCardTitle>
                 <CRow>
                   <CCol xs={4}>
                     <CCallout>

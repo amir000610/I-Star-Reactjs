@@ -447,7 +447,7 @@ const PDregister = () => {
                               />
                             </CTableDataCell>
                           </CTableRow>
-                          <CTableRow>
+                          {/*<CTableRow>
                             <CTableDataCell colSpan={3}>
                               <CButton>Select All</CButton>
                               <CButton style={{ marginLeft: '10px' }}>Unselect All</CButton>
@@ -459,7 +459,7 @@ const PDregister = () => {
                                 ''
                               )}
                             </CTableDataCell>
-                          </CTableRow>
+                              </CTableRow>*/}
                         </CTableBody>
                       </CTable>
                     ) : (
@@ -482,7 +482,7 @@ const PDregister = () => {
                               <CTableHeaderCell scope="col" rowSpan={2}>
                                 <center>Status</center>
                               </CTableHeaderCell>
-                              <CTableHeaderCell scope="col" colSpan={4}>
+                              <CTableHeaderCell scope="col" colSpan={3}>
                                 <center>Class</center>
                               </CTableHeaderCell>
                               <CTableHeaderCell scope="col"></CTableHeaderCell>
@@ -498,7 +498,7 @@ const PDregister = () => {
                                 <center>AAP English</center>
                               </CTableHeaderCell>
                               <CTableHeaderCell scope="col"></CTableHeaderCell>
-                              <CTableHeaderCell scope="col"></CTableHeaderCell>
+                              {/*<CTableHeaderCell scope="col"></CTableHeaderCell>*/}
                             </CTableRow>
                           </>
                         ) : (
@@ -560,7 +560,7 @@ const PDregister = () => {
                                   </CDropdownMenu>
                                 </CDropdown>
                               </CTableDataCell>
-                              <CTableDataCell>
+                              {/*<CTableDataCell>
                                 <div>
                                   <CFormCheck
                                     type="checkbox"
@@ -569,7 +569,7 @@ const PDregister = () => {
                                     label=""
                                   />
                                 </div>
-                              </CTableDataCell>
+                                    </CTableDataCell>*/}
                             </CTableRow>
                           )
                         })}

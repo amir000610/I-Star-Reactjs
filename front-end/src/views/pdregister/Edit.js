@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import {
   CModal,
   CModalBody,
-  CFormInput,
   CModalFooter,
   CModalHeader,
   CModalTitle,
@@ -77,7 +76,7 @@ function UpdateStudent({ openedit, setopenedit, editid, ModuleData, seteditid })
           name="class_Ndp"
           defaultValue={editid?.class_Ndp}
         >
-          <option>..choose Class..</option>
+          <option>..Choose Class NDP..</option>
           <option value="0" selected={editid?.class_Ndp === '0' ? true : false}>
             Completed
           </option>
@@ -101,7 +100,7 @@ function UpdateStudent({ openedit, setopenedit, editid, ModuleData, seteditid })
           name="class_AAP_math"
           defaultValue={editid?.class_AAP_math}
         >
-          <option>..choose Class..</option>
+          <option>..Choose Class AAP_Math..</option>
           <option value="0" selected={editid?.class_AAP_math === '0' ? true : false}>
             Completed
           </option>
@@ -125,7 +124,7 @@ function UpdateStudent({ openedit, setopenedit, editid, ModuleData, seteditid })
           name="class_AAP_eng"
           defaultValue={editid?.class_AAP_eng}
         >
-          <option>..choose Class..</option>
+          <option>..Choose Class AAP_ENG..</option>
           <option value="0" selected={editid?.class_AAP_eng === '0' ? true : false}>
             Completed
           </option>

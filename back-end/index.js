@@ -129,6 +129,58 @@ app.post("/login", (req, res) => {
   }})
 })
 
+app.post("/face-login", async (req, res) => {
+  try {
+    // Perform face recognition
+    const inputImage = await canvas.loadImage(req.body.imageData);
+    const detections = await faceapi.detectAllFaces(inputImage).withFaceLandmarks().withFaceDescriptors();
+    
+    // If no faces detected or multiple faces detected, return error
+    if (detections.length !== 1) {
+      return res.status(400).json({ error: 'Please provide a clear image with exactly one face.' });
+    }
+    
+    // Fetch user data based on the recognized face
+    // For example, you might have a separate table for face data
+    const faceDescriptor = detections[0].descriptor;
+    const userData = await getUserDataByFaceDescriptor(faceDescriptor);
+    
+    // If user not found, return error
+    if (!userData) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+    
+    // Authenticate the user
+    // For simplicity, let's assume authentication is successful
+    const name = userData.name;
+    const token = Jwt.sign({ name }, 'jwt-secret-key', { expiresIn: '1d' });
+    res.cookie('token', token);
+    return res.json({ status: 'Success' });
+  } catch (error) {
+    console.error('Face recognition error:', error);
+    return res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+// Helper function to fetch user data based on face descriptor
+async function getUserDataByFaceDescriptor(faceDescriptor) {
+  // Implement your logic to fetch user data based on the face descriptor
+  // For example, you might query a database for the user with a similar face descriptor
+  // Replace this with your actual logic
+  // This is just a placeholder implementation
+  const sql = "SELECT * FROM login";
+  const [rows] = await db.execute(sql);
+  for (const row of rows) {
+    const storedFaceDescriptor = JSON.parse(row.face_descriptor); // Assuming face_descriptor is stored as JSON
+    const isMatch = await bcrypt.compare(JSON.stringify(faceDescriptor), storedFaceDescriptor);
+    if (isMatch) {
+      return { name: row.name }; // Return user data if face descriptor matches
+    }
+  }
+  return null; // Return null if no matching user found
+}
+
+
 
 //Verify
 app.post('/', (req, res) => {
