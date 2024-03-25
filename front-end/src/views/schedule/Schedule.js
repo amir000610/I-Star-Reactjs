@@ -29,8 +29,9 @@ import {
 } from '@coreui/react'
 import packageJson from '../../../package.json'
 const { config } = packageJson
+
+axios.defaults.withCredentials = true
 const Module = () => {
-  axios.defaults.withCredentials = true
   const [visible, setVisible] = useState(false)
   const [Tvisible, TsetVisible] = useState(false)
 

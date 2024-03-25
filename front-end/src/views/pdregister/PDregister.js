@@ -216,11 +216,13 @@ const PDregister = () => {
     )
   }
 
+  const [ischange, setischange] = useState(false)
+
   //DeleteButton
   const onDelete = async (id) => {
     try {
       await axios.post(`${config.REACT_APP_API_ENDPOINT}/deletestudent`, { id })
-      window.location.reload()
+      setischange(!ischange)
     } catch (err) {
       console.log(err)
     }
@@ -325,7 +327,7 @@ const PDregister = () => {
     }
     getData()
     fetchInstitution()
-  }, [])
+  }, [ischange])
 
   useEffect(() => {
     console.log(otherres)
@@ -530,7 +532,6 @@ const PDregister = () => {
                                   </CBadge>
                                 </center>
                               </CTableDataCell>
-                              {/*<CTableDataCell>{val.institution_name}</CTableDataCell>*/}
                               <CTableDataCell>
                                 <center>{val.class_Ndp}</center>
                               </CTableDataCell>

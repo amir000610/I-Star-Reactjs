@@ -33,6 +33,7 @@ const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
   const [StudentData, setstudent] = useState([])
   const [TutorData, setTutorData] = useState([])
   const [role, setrole] = useState('')
+  const [active, setactive] = useState('')
   const navigate = useNavigate()
 
   const getData = async () => {
@@ -113,7 +114,7 @@ const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
       await axios.post(`${config.REACT_APP_API_ENDPOINT}/addform2`, {
         data7: schedule_id,
       })
-      window.location.reload()
+      setactive(true)
     } catch (err) {
       console.log(err)
     }
@@ -135,7 +136,11 @@ const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
       .catch((err) => console.log(err))
     getData()
     gettutor()
-  }, [])
+    const interval = setInterval(() => {
+      complete()
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [active])
 
   return (
     <CModal visible={Tvisible} onClose={() => TsetVisible(false)} size="lg">
@@ -235,17 +240,21 @@ const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
           Close
         </CButton>
         {role === 'Admin' &&
-          (TutorData?.filter(
-            (idx) => idx.schedule_id === schedule_id && idx.class_Ndp === idx.class,
-          ).slice(0, 1)[0]?.complete === 1 ? (
-            <CButton color="secondary" disabled>
-              Completed <FontAwesomeIcon icon={faCheck} style={{ color: '#0c0d0d' }} />
-            </CButton>
-          ) : (
-            <CButton color="secondary" onClick={complete}>
-              Complete
-            </CButton>
-          ))}
+        TutorData?.filter(
+          (idx) =>
+            idx.schedule_id === schedule_id &&
+            (idx.class_Ndp === idx.class ||
+              idx.class_AAP_eng === idx.class ||
+              idx.class_AAP_math === idx.class),
+        ).slice(0, 1)[0]?.complete === 1 ? (
+          <CButton color="secondary" disabled>
+            Completed <FontAwesomeIcon icon={faCheck} style={{ color: '#0c0d0d' }} />
+          </CButton>
+        ) : (
+          <CButton color="secondary" onClick={complete}>
+            Complete
+          </CButton>
+        )}
       </CModalFooter>
     </CModal>
   )
