@@ -158,7 +158,7 @@ app.get("/tutor" , (req,res) => {
 
 //Schedule
 app.get("/schedule" , (req,res) => {
-  const sql = "SELECT * FROM schedule JOIN institution ON schedule.institution_id = institution.institution_id JOIN module ON module.module_id = schedule.module_id JOIN login ON login.login_id = schedule.login_id ORDER BY module.module_name";
+  const sql = "SELECT * FROM schedule JOIN institution ON schedule.institution_id = institution.institution_id JOIN module ON module.module_id = schedule.module_id JOIN login ON login.login_id = schedule.login_id ORDER BY schedule.date DESC, module.module_name DESC";
   db.query(sql,(err,data) => {
       if (err) return res.json(err)
       return res.json(data)
@@ -516,7 +516,7 @@ app.post("/addinsti", (req, res) => {
 
 //Module
 app.get("/module" , (req,res) => {
-  const sql = "SELECT * FROM module ORDER BY module_name ASC";
+  const sql = "SELECT * FROM module ORDER BY module.module_name ASC";
   db.query(sql,(err,data) => {
       if (err) return res.json(err)
       return res.json(data)

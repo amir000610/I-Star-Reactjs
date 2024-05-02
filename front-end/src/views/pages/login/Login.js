@@ -17,7 +17,6 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import FaceRecognition from './Face'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import logo from 'src/assets/brand/i-star logo (2).png'
 import packageJson from '../../../../package.json'
@@ -25,7 +24,6 @@ const { config } = packageJson
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
-  const [face, setface] = useState()
   const [values, setvalues] = useState({
     email: '',
     password: '',
@@ -53,32 +51,18 @@ const Login = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     checkLoggedIn()
+    console.log('Check login successful')
     axios.post(`${config.REACT_APP_API_ENDPOINT}/login`, values).then((res) => {
       if (res.data.Status === 'Success') {
         navigate('/dashboard')
       } else {
-        alert('error')
+        console.log('error:' + res.data.Error)
       }
     })
   }
 
-  const handleFaceDetected = async (detections) => {
-    try {
-      await axios.get(`${config.REACT_APP_API_ENDPOINT}/face-login`).then((response) => {
-        if (response) {
-          setface(response.data)
-        }
-      })
-    } catch (error) {
-      console.error(error)
-    }
-    console.log(detections) // For demonstration, you can add your logic to authenticate users based on face recognition here
-  }
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      handleFaceDetected()
-    }, 5000)
+    const interval = setInterval(() => {}, 5000)
     return () => clearInterval(interval)
   }, [])
 

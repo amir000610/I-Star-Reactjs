@@ -20,6 +20,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarDays, faHourglassHalf } from '@fortawesome/free-solid-svg-icons'
 import ScrollToTopButton from '../report/monthly/scrolltotop'
 import packageJson from '../../../package.json'
+import * as Sentry from '@sentry/react'
 const { config } = packageJson
 
 const Dashboard = () => {

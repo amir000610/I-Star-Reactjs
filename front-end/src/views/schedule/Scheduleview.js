@@ -140,7 +140,7 @@ const Scheduleview = ({ Tvisible, TsetVisible, schedule_id }) => {
       complete()
     }, 5000)
     return () => clearInterval(interval)
-  }, [active])
+  }, [])
 
   return (
     <CModal visible={Tvisible} onClose={() => TsetVisible(false)} size="lg">

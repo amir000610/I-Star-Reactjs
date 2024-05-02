@@ -93,16 +93,16 @@ function Addmdl() {
     getData()
   }, [])
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const recordsPerPage = 5
-  const lastIndex = currentPage * recordsPerPage
-  const firstIndex = lastIndex - recordsPerPage
-  const records = ModuleData.slice(firstIndex, lastIndex)
-  const npage = Math.ceil(ModuleData.length / recordsPerPage)
-  const numbers = Array.from({ length: npage }, (_, i) => i + 1)
-  const filteredData = records.filter((data) =>
+  const filteredData = ModuleData.filter((data) =>
     data.module_name.toLowerCase().includes(searchQuery.toLowerCase()),
   )
+  const [currentPage, setCurrentPage] = useState(1)
+  const recordsPerPage = 10
+  const lastIndex = currentPage * recordsPerPage
+  const firstIndex = lastIndex - recordsPerPage
+  const records = filteredData.slice(firstIndex, lastIndex)
+  const npage = Math.ceil(ModuleData.length / recordsPerPage)
+  const numbers = Array.from({ length: npage }, (_, i) => i + 1)
 
   //Login Credential
   axios.defaults.withCredentials = true
@@ -122,7 +122,6 @@ function Addmdl() {
   useEffect(() => {
     if (role === 'Tutor') {
       setShowAlert(true)
-      console.log(role)
     }
   }, [role])
   const [showAlert, setShowAlert] = useState(false)
@@ -219,7 +218,7 @@ function Addmdl() {
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {filteredData?.map((val, key) => {
+                    {records?.map((val, key) => {
                       return (
                         <CTableRow key={key}>
                           <CTableDataCell>

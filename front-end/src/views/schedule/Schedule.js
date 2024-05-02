@@ -161,19 +161,17 @@ const Module = () => {
     return newDate
   }
 
+  const updatedformdataa = formdata.filter((data) =>
+    role === 'Admin' ? data.login_id > 0 : data.login_id === loginuser,
+  )
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
   const recordsPerPage = 30
   const lastIndex = currentPage * recordsPerPage
   const firstIndex = lastIndex - recordsPerPage
-  const records = formdata.slice(firstIndex, lastIndex)
-  const npage = Math.ceil(formdata.length / recordsPerPage)
+  const records = updatedformdataa.slice(firstIndex, lastIndex)
+  const npage = Math.ceil(updatedformdataa.length / recordsPerPage)
   const numbers = Array.from({ length: npage }, (_, i) => i + 1)
-  const updatedformdataa = records.filter((data) =>
-    data.module_name.toLowerCase().includes(searchQuery.toLowerCase()) && role === 'Admin'
-      ? data.login_id > 0
-      : data.login_id === loginuser,
-  )
 
   useEffect(() => {
     axios
@@ -303,7 +301,7 @@ const Module = () => {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {updatedformdataa?.map((val, key) => {
+                  {records?.map((val, key) => {
                     return (
                       <CTableRow key={key}>
                         <CTableDataCell>
